@@ -9,12 +9,14 @@ import androidx.fragment.app.viewModels
 import com.example.shiristory.R
 
 class TimelineFragment : Fragment() {
+
+    val model: TimelineViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val model: TimelineViewModel by viewModels()
         val root = inflater.inflate(R.layout.fragment_timeline, container, false)
         return root
     }

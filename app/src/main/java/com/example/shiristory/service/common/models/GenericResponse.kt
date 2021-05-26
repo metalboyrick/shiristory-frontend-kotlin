@@ -1,6 +1,5 @@
-package com.example.shiristory.service.common
+package com.example.shiristory.service.common.models
 
-import com.example.shiristory.service.timeline.responses.SimpleUser
 import com.google.gson.annotations.SerializedName
 
 data class GenericResponse(
