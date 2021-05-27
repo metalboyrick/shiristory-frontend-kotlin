@@ -1,5 +1,6 @@
 package com.example.shiristory.ui.timeline
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,11 +38,13 @@ class TimelineViewModel : ViewModel() {
         call.enqueue(object : Callback<PostsResponse> {
 
             override fun onFailure(call: Call<PostsResponse>, t: Throwable) {
-                TODO("not implemented")
+                Log.d("we", t.message!!)
             }
 
             override fun onResponse(call: Call<PostsResponse>, response: Response<PostsResponse>) {
-                TODO("not implemented")
+                val postsResponse = response.body()
+                Log.d("we","aaaaaaa")
+                _postList?.value = postsResponse?.posts
             }
         })
     }
