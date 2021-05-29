@@ -20,7 +20,9 @@ class PostAdapter(private val dataSet: List<Post>) :
      */
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val postContent: TextView = view.findViewById(R.id.post_content)
+        val postAuthor:TextView = view.findViewById(R.id.post_author)
         val postAuthorPic: CircleImageView = view.findViewById(R.id.post_author_pic)
+        val postCreatedAt: TextView = view.findViewById(R.id.post_created_at)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -42,6 +44,8 @@ class PostAdapter(private val dataSet: List<Post>) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.postContent.text = post.content
+        viewHolder.postAuthor.text = post.author.username
+        viewHolder.postCreatedAt.text = post.createdAt
 
         Glide.with(viewHolder.itemView).load(post.author.profilePicUrl).into(viewHolder.postAuthorPic);
 
