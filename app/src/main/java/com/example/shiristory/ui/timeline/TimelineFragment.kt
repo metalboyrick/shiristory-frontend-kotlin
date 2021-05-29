@@ -15,6 +15,7 @@ import com.example.shiristory.service.timeline.models.Post
 class TimelineFragment : Fragment() {
 
     private val _model: TimelineViewModel by viewModels()
+    private val _page: Int = 1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +36,7 @@ class TimelineFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        _model.getPosts()?.observe(viewLifecycleOwner, Observer {
+        _model.getPosts(_page)?.observe(viewLifecycleOwner, Observer {
             print(it)
             postList = it
             recyclerView.adapter = PostAdapter(postList)

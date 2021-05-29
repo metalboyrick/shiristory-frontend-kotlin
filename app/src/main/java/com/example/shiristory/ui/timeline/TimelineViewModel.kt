@@ -20,13 +20,13 @@ class TimelineViewModel : ViewModel() {
     private val _service: TimelineApiService = RetrofitBuilder.timelineApiService
 
     // We will call this method to get the data
-    fun getPosts(): LiveData<List<Post>>? {
+    fun getPosts(page:Int = 1, size:Int = 10): LiveData<List<Post>>? {
 
         // If the list is null
         if (_postList == null) {
             _postList = MutableLiveData<List<Post>>()
             // We will load it asynchronously from server in this method
-            loadPosts(page = 1)
+            loadPosts(page, size)
         }
 
         return _postList
