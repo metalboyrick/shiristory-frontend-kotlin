@@ -1,13 +1,10 @@
 package com.example.shiristory.ui.timeline
 
-import android.app.Activity
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.ListView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,7 +13,6 @@ import com.example.shiristory.service.timeline.models.Post
 import com.like.LikeButton
 import com.like.OnLikeListener
 import de.hdodenhof.circleimageview.CircleImageView
-import org.w3c.dom.Text
 
 
 class PostAdapter(private val dataSet: List<Post>) :
