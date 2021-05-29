@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="inactive_color">#757575</color>
+    <color name="active_color">#53aea5</color>
+
     <color name="alice_blue_50">#EDF6F9</color>
     <color name="alice_blue_100">#d8e8eb</color>
     <color name="blue_green_200">#83c5be</color>

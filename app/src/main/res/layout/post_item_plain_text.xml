@@ -72,7 +72,6 @@
             android:id="@+id/post_like_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:animateLayoutChanges="false"
             android:clipChildren="false"
             android:clipToPadding="false"
             app:icon_size="10dp"
@@ -80,6 +79,31 @@
 
         <TextView
             android:id="@+id/post_like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textSize="18sp" />
+
+        <com.like.LikeButton
+            android:id="@+id/post_comment_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            app:icon_size="30dp"
+            app:like_drawable="@drawable/ic_baseline_comment_active_24"
+            app:unlike_drawable="@drawable/ic_baseline_comment_inactive_24"
+            app:dots_primary_color="@color/blue_green_200"
+            app:dots_secondary_color="@color/blue_green_300"
+            app:circle_start_color="@color/blue_green_200"
+            app:circle_end_color="@color/blue_green_300"
+
+            />
+
+        <TextView
+            android:id="@+id/post_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"

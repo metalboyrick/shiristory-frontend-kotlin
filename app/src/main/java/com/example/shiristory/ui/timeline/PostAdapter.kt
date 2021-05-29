@@ -24,6 +24,7 @@ class PostAdapter(private val dataSet: List<Post>) :
         val postAuthorPic: CircleImageView = view.findViewById(R.id.post_author_pic)
         val postCreatedAt: TextView = view.findViewById(R.id.post_created_at)
         val postLikeCount: TextView = view.findViewById(R.id.post_like_count)
+        val postCommentCount: TextView = view.findViewById(R.id.post_comment_count)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -48,6 +49,7 @@ class PostAdapter(private val dataSet: List<Post>) :
         viewHolder.postAuthor.text = post.author.username
         viewHolder.postCreatedAt.text = post.createdAt
         viewHolder.postLikeCount.text = post.likes.size.toString()
+        viewHolder.postCommentCount.text = post.comments.size.toString()
 
         Glide.with(viewHolder.itemView).load(post.author.profilePicUrl)
             .into(viewHolder.postAuthorPic);
