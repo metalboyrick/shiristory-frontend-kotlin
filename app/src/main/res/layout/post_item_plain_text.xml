@@ -63,6 +63,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:gravity="center_vertical"
@@ -92,15 +93,14 @@
             android:layout_height="40dp"
             android:clipChildren="false"
             android:clipToPadding="false"
-            app:icon_size="30dp"
-            app:like_drawable="@drawable/ic_baseline_comment_active_24"
-            app:unlike_drawable="@drawable/ic_baseline_comment_inactive_24"
+            app:circle_end_color="@color/blue_green_300"
+            app:circle_start_color="@color/blue_green_200"
             app:dots_primary_color="@color/blue_green_200"
             app:dots_secondary_color="@color/blue_green_300"
-            app:circle_start_color="@color/blue_green_200"
-            app:circle_end_color="@color/blue_green_300"
-
-            />
+            app:icon_size="30dp"
+            app:liked="false"
+            app:like_drawable="@drawable/ic_baseline_comment_active_24"
+            app:unlike_drawable="@drawable/ic_baseline_comment_inactive_24" />
 
         <TextView
             android:id="@+id/post_comment_count"
@@ -112,4 +112,12 @@
             android:textSize="18sp" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/post_comments_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"></LinearLayout>
+
 </LinearLayout>
