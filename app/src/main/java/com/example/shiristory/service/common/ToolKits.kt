@@ -20,13 +20,11 @@ class ToolKits {
         fun parseMultiPartFile(path: Uri, mediaType : String): MultipartBody.Part {
             val file = File(path.path!!)
 
-            val filePart: MultipartBody.Part = MultipartBody.Part.createFormData(
+            return MultipartBody.Part.createFormData(
                 file.name, file.name, RequestBody.create(
                     MediaType.parse(mediaType), file
                 )
             )
-
-            return filePart
         }
     }
 }
