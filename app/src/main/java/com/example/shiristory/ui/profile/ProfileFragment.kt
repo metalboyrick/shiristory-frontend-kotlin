@@ -1,6 +1,7 @@
 package com.example.shiristory.ui.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ class ProfileFragment : Fragment() {
     private val _model: ProfileViewModel by viewModels()
     private var nickname: TextView? = null
     private var profilePic: CircleImageView? = null
+    private var bio: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,12 +38,16 @@ class ProfileFragment : Fragment() {
 
         nickname = view.findViewById(R.id.nickname)
         profilePic = view.findViewById(R.id.profile_picture)
+        bio = view.findViewById(R.id.bio)
 
         _model.getUserProfile().observe(viewLifecycleOwner, Observer {
             nickname?.setText(it.nickname)
+            bio?.setText(it.bio)
             Glide.with(this).load(it.profile_pic_url).into(profilePic!!)
         })
 
     }
+
+
 
 }
