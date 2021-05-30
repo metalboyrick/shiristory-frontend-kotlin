@@ -21,4 +21,5 @@ data class User(
     val updatedAt:String,
     @SerializedName("friends")
     var friends:ArrayList<User> = ArrayList<User>()
+
 )

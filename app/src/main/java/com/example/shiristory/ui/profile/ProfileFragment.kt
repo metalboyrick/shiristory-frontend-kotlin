@@ -49,5 +49,16 @@ class ProfileFragment : Fragment() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+
+        _model.getUserProfile().observe(viewLifecycleOwner, Observer {
+            nickname?.setText(it.nickname)
+            bio?.setText(it.bio)
+            Glide.with(this).load(it.profile_pic_url).into(profilePic!!)
+        })
+    }
+
+
 
 }

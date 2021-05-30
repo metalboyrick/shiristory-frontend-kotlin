@@ -1,20 +1,31 @@
-package com.example.shiristory
+package com.example.shiristory.ui.profile
 
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.example.shiristory.R
 import com.example.shiristory.ui.base.GlideImageLoader
+import com.rengwuxian.materialedittext.MaterialEditText
 import lv.chi.photopicker.ChiliPhotoPicker
 import lv.chi.photopicker.PhotoPickerFragment
 
 
-class EditProfile : AppCompatActivity(), PhotoPickerFragment.Callback{
+class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback{
+
+    private val _model: ProfileViewModel by viewModels()
+
     private var profile_picture_preview : ImageView? = null;
+    private var new_nickname : MaterialEditText? = null
+    private var new_bio : MaterialEditText? = null
+    private var new_profile_pic_uri : Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
@@ -27,6 +38,8 @@ class EditProfile : AppCompatActivity(), PhotoPickerFragment.Callback{
             authority = "lv.chi.sample.fileprovider"
         )
 
+        new_nickname = findViewById(R.id.new_nickname)
+        new_bio = findViewById(R.id.new_bio)
         profile_picture_preview = findViewById(R.id.profile_picture_preview)
     }
 
@@ -43,12 +56,29 @@ class EditProfile : AppCompatActivity(), PhotoPickerFragment.Callback{
             allowCamera = true,
             maxSelection = 5,
             theme = R.style.ChiliPhotoPicker_Light
-        ).show(supportFragmentManager,"select-image")
+        ).show(supportFragmentManager, "select-image")
 
     }
+
 
     override fun onImagesPicked(photos: ArrayList<Uri>) {
+        new_profile_pic_uri = photos[0]
         Glide.with(this).load(photos[0]).into(profile_picture_preview!!)
     }
+
+    fun submitUserProfileUpdate(view: View){
+        _model.updateUserProfile(
+            new_nickname?.getText().toString(),
+            new_bio?.getText().toString(),
+            new_profile_pic_uri!!
+        ).observe(this, Observer {
+            if (it) {
+                Log.d("update status", "OK")
+                finish();
+                super.onBackPressed();
+            }
+        })
+    }
+
 
 }

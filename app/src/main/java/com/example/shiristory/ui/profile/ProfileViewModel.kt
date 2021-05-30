@@ -1,30 +1,31 @@
 package com.example.shiristory.ui.profile
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.shiristory.service.common.RetrofitBuilder
+import com.example.shiristory.service.common.models.GenericResponse
 import com.example.shiristory.service.user.UserApiService
 import com.example.shiristory.service.user.models.User
 import com.example.shiristory.service.user.models.UserProfileResponse
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class ProfileViewModel : ViewModel() {
     private var _profile: MutableLiveData<User> = MutableLiveData<User>();
+    private var _updateStatus: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     private val _service: UserApiService = RetrofitBuilder.userApiService
 
     // We will call this method to get the data
     fun getUserProfile(): LiveData<User> {
 
-        loadUserProfile()
-
-        return _profile
-    }
-
-    fun loadUserProfile() {
         val call: Call<UserProfileResponse> = _service.getUserProfile()
         call.enqueue(object : Callback<UserProfileResponse> {
 
@@ -32,9 +33,12 @@ class ProfileViewModel : ViewModel() {
                 Log.d("user", t.message!!)
             }
 
-            override fun onResponse(call: Call<UserProfileResponse>, response: Response<UserProfileResponse>) {
+            override fun onResponse(
+                call: Call<UserProfileResponse>,
+                response: Response<UserProfileResponse>
+            ) {
                 val userProfileResponse = response.body()
-                Log.d("user","profile data received")
+                Log.d("user", "profile data received")
 
                 Log.d("user", userProfileResponse?.user?.nickname.toString())
 
@@ -42,6 +46,50 @@ class ProfileViewModel : ViewModel() {
 
             }
         })
+
+        return _profile
+    }
+
+
+    fun updateUserProfile(
+        new_nickname : String,
+        new_bio: String,
+        new_profile_pic_uri: Uri
+    ): LiveData<Boolean>
+    {
+        Log.d("new_nickname",new_nickname)
+        Log.d("new_bio",new_bio)
+        Log.d("new_profile_pic_uri",new_profile_pic_uri.getPath()!!)
+
+        _updateStatus.value = false
+        val file = File(new_profile_pic_uri.getPath()!!);// initialize file here
+
+        val filePart : MultipartBody.Part = MultipartBody.Part.createFormData(file.getName(), file.getName(), RequestBody.create(
+            MediaType.parse("image/*"), file));
+        Log.d("file name",file.getName())
+        val call: Call<GenericResponse> = _service.updateUserProfile(
+            new_nickname = RequestBody.create(MediaType.parse("multipart/form-data"),new_nickname),
+            new_bio = RequestBody.create(MediaType.parse("multipart/form-data"),new_bio),
+            new_profile_pic = filePart)
+        call.enqueue(object : Callback<GenericResponse> {
+
+            override fun onFailure(call: Call<GenericResponse>, t: Throwable) {
+                Log.d("user", t.message!!)
+            }
+
+            override fun onResponse(
+                call: Call<GenericResponse>,
+                response: Response<GenericResponse>
+            ) {
+                val userProfileResponse = response.body()
+                Log.d("user", "profile updated")
+                Log.d("update message",userProfileResponse?.message!!)
+                _updateStatus.value = true
+
+            }
+        })
+
+        return _updateStatus
     }
 
 }
