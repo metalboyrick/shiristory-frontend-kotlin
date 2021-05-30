@@ -1,6 +1,7 @@
 package com.example.shiristory.ui.timeline
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ class TimelineFragment : Fragment() {
 
     private val _model: TimelineViewModel by viewModels()
     private val _page: Int = 1
+    private lateinit var _recyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,15 +33,15 @@ class TimelineFragment : Fragment() {
 
         var postList: List<Post>
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.timeline_recyclerview)
+        _recyclerView = view.findViewById(R.id.timeline_recyclerview)
 
 
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        _recyclerView.layoutManager = LinearLayoutManager(context)
 
         _model.getPosts(_page)?.observe(viewLifecycleOwner, Observer {
-            print(it)
-            postList = it
-            recyclerView.adapter = PostAdapter(postList)
+            if (it != null) {
+                _recyclerView.adapter = PostAdapter(it, _model)
+            }
         })
     }
 }

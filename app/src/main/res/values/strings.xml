@@ -8,6 +8,7 @@
     <string name="logout">Logout</string>
     <string name="upload_image">Upload</string>
     <string name="update_profile">Update</string>
+    <string name="post_comment_hint">Write a comment...</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
