@@ -1,5 +1,6 @@
 package com.example.shiristory
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -32,4 +33,8 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
+    fun openEditProfileDialog(view : View) {
+        val intent = Intent(this, EditProfile::class.java)
+        startActivity(intent)
+    }
 }
