@@ -5,11 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +26,10 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private val TAG = this.javaClass.name
+
+
+    // Return the size of your _dataSet (invoked by the layout manager)
+    override fun getItemCount() = _dataSet.size
 
     /**
      * Provide a reference to the type of views that you are using
@@ -61,9 +63,6 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.post_item_plain_text, viewGroup, false)
 
-        val commentView = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.post_item_comment, viewGroup, false)
-
         return PostViewHolder(view)
     }
 
@@ -75,34 +74,13 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         viewHolder.postContent.text = post.content
         viewHolder.postAuthor.text = post.author.username
         viewHolder.postCreatedAt.text = post.createdAt
-        viewHolder.postLikeCount.text = post.likes.size.toString()
 
-        // TODO: check if user has already liked
-
+        // Comments
         viewHolder.postCommentCount.text = post.comments.size.toString()
-
         viewHolder.postCommentLayout.removeAllViews()
-
         for (comment in post.comments) {
             addCommentView(viewHolder, comment)
         }
-
-        viewHolder.postLikeButton.setOnLikeListener(
-            object : OnLikeListener {
-                override fun liked(likeButton: LikeButton) {
-                    Log.d(TAG, "like " + post.content)
-                    _model.likePost(post.id)
-                    updateLikeCount(viewHolder, 1)
-                }
-
-                override fun unLiked(likeButton: LikeButton) {
-                    Log.d(TAG, "dislike" + post.content)
-                    _model.likePost(post.id, dislike = true)
-                    updateLikeCount(viewHolder, -1)
-                }
-            }
-        )
-
         viewHolder.postCommentButton.setOnLikeListener(
             object : OnLikeListener {
                 override fun liked(likeButton: LikeButton) {
@@ -121,13 +99,29 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
             submitComment(viewHolder, post)
         })
 
+        // Likes
+        viewHolder.postLikeCount.text = post.likes.size.toString()
+        // TODO: check if user has already liked
+        viewHolder.postLikeButton.setOnLikeListener(
+            object : OnLikeListener {
+                override fun liked(likeButton: LikeButton) {
+                    Log.d(TAG, "like " + post.content)
+                    _model.likePost(post.id)
+                    updateLikeCount(viewHolder, 1)
+                }
+
+                override fun unLiked(likeButton: LikeButton) {
+                    Log.d(TAG, "dislike" + post.content)
+                    _model.likePost(post.id, dislike = true)
+                    updateLikeCount(viewHolder, -1)
+                }
+            }
+        )
+
+        // Load profile pic
         Glide.with(viewHolder.itemView).load(post.author.profilePicUrl)
             .into(viewHolder.postAuthorPic)
-
     }
-
-    // Return the size of your _dataSet (invoked by the layout manager)
-    override fun getItemCount() = _dataSet.size
 
     private fun addCommentView(viewHolder: PostViewHolder, comment: Comment) {
         val commentView = LayoutInflater.from(viewHolder.postCommentLayout.context)
@@ -142,7 +136,7 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         viewHolder.postCommentLayout.addView(commentView)
     }
 
-    private fun submitComment(viewHolder: PostViewHolder, post:Post){
+    private fun submitComment(viewHolder: PostViewHolder, post: Post) {
         val input: MaterialEditText = viewHolder.postCommentInput
         val commentCountView: TextView = viewHolder.postCommentCount
         val text: String = input.text.toString()
@@ -168,7 +162,7 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         }
     }
 
-    private fun updateLikeCount(viewHolder: PostViewHolder, increment:Int){
+    private fun updateLikeCount(viewHolder: PostViewHolder, increment: Int) {
         val likeCountView: TextView = viewHolder.postLikeCount
         likeCountView.text = (likeCountView.text.toString().toInt() + increment).toString()
     }
