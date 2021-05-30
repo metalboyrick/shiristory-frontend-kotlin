@@ -1,10 +1,7 @@
 package com.example.shiristory.ui.timeline
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -12,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shiristory.R
 import com.example.shiristory.service.timeline.models.Post
+
 
 class TimelineFragment : Fragment() {
 
@@ -43,5 +41,28 @@ class TimelineFragment : Fragment() {
                 _recyclerView.adapter = PostAdapter(it, _model)
             }
         })
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.timeline_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+
+        R.id.action_add_post -> {
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
     }
 }
