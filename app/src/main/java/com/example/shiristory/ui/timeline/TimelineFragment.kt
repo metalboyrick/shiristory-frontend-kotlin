@@ -40,7 +40,7 @@ class TimelineFragment : Fragment() {
 
         _model.getPosts(_page)?.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                _recyclerView.adapter = PostAdapter(it)
+                _recyclerView.adapter = PostAdapter(it, _model)
             }
         })
     }

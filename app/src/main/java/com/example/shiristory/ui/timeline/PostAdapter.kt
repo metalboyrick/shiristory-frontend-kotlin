@@ -1,21 +1,30 @@
 package com.example.shiristory.ui.timeline
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
+import com.example.shiristory.service.common.ToolKits
+import com.example.shiristory.service.timeline.models.Comment
 import com.example.shiristory.service.timeline.models.Post
 import com.like.LikeButton
 import com.like.OnLikeListener
+import com.rengwuxian.materialedittext.MaterialEditText
 import de.hdodenhof.circleimageview.CircleImageView
 
 
-class PostAdapter(private val dataSet: List<Post>) :
+class PostAdapter(private val _dataSet: List<Post>, private val _model: TimelineViewModel) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private val TAG = this.javaClass.name
@@ -29,11 +38,17 @@ class PostAdapter(private val dataSet: List<Post>) :
         val postAuthor: TextView = view.findViewById(R.id.post_author)
         val postAuthorPic: CircleImageView = view.findViewById(R.id.post_author_pic)
         val postCreatedAt: TextView = view.findViewById(R.id.post_created_at)
+
         val postLikeButton: LikeButton = view.findViewById(R.id.post_like_button)
         val postLikeCount: TextView = view.findViewById(R.id.post_like_count)
+
         val postCommentButton: LikeButton = view.findViewById(R.id.post_comment_button)
         val postCommentCount: TextView = view.findViewById(R.id.post_comment_count)
         val postCommentLayout: LinearLayout = view.findViewById(R.id.post_comments_layout)
+        val postCommentInputLayout: LinearLayout = view.findViewById(R.id.post_comment_input_layout)
+        val postCommentSubmitButton: ImageButton =
+            view.findViewById(R.id.post_comment_submit_button)
+        val postCommentInput: MaterialEditText = view.findViewById(R.id.post_comment_input)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -54,8 +69,8 @@ class PostAdapter(private val dataSet: List<Post>) :
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: PostViewHolder, position: Int) {
-        val post: Post = dataSet[position]
-        // Get element from your dataset at this position and replace the
+        val post: Post = _dataSet[position]
+        // Get element from your _dataSet at this position and replace the
         // contents of the view with that element
         viewHolder.postContent.text = post.content
         viewHolder.postAuthor.text = post.author.username
@@ -66,16 +81,7 @@ class PostAdapter(private val dataSet: List<Post>) :
         viewHolder.postCommentLayout.removeAllViews()
 
         for (comment in post.comments) {
-            val commentView = LayoutInflater.from(viewHolder.postCommentLayout.context)
-                .inflate(R.layout.post_item_comment, viewHolder.postCommentLayout, false)
-
-            commentView.findViewById<TextView>(R.id.post_comment_author).text =
-                comment.author.username
-            commentView.findViewById<TextView>(R.id.post_comment_created_at).text =
-                comment.createdAt
-            commentView.findViewById<TextView>(R.id.post_comment_comment).text = comment.comment
-
-            viewHolder.postCommentLayout.addView(commentView)
+            addCommentView(viewHolder, comment)
         }
 
         viewHolder.postLikeButton.setOnLikeListener(
@@ -94,20 +100,62 @@ class PostAdapter(private val dataSet: List<Post>) :
             object : OnLikeListener {
                 override fun liked(likeButton: LikeButton) {
                     viewHolder.postCommentLayout.visibility = View.VISIBLE
+                    viewHolder.postCommentInputLayout.visibility = View.VISIBLE
                 }
 
                 override fun unLiked(likeButton: LikeButton) {
                     viewHolder.postCommentLayout.visibility = View.GONE
+                    viewHolder.postCommentInputLayout.visibility = View.GONE
                 }
             }
         )
 
+        viewHolder.postCommentSubmitButton.setOnClickListener(View.OnClickListener() {
+
+            val input: MaterialEditText = viewHolder.postCommentInput
+            val commentCountView: TextView = viewHolder.postCommentCount
+            val text: String = input.text.toString()
+
+            viewHolder.postCommentInput.clearFocus()
+
+            if (text.isNotEmpty()) {
+
+                Log.d(TAG, "clicked: " + post.id + " " + text)
+
+                val context: Context = viewHolder.postCommentLayout.context
+
+                _model.addComment(post_id = post.id, comment = text)
+                    .observe(context as LifecycleOwner, Observer {
+                        if (it != null) {
+                            addCommentView(viewHolder, it)
+                            commentCountView.text =
+                                (commentCountView.text.toString().toInt() + 1).toString()
+                            input.text?.clear()
+                            ToolKits.hideSoftKeyboard(context, input)
+                        }
+                    })
+            }
+
+        })
+
         Glide.with(viewHolder.itemView).load(post.author.profilePicUrl)
-            .into(viewHolder.postAuthorPic);
+            .into(viewHolder.postAuthorPic)
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
+    // Return the size of your _dataSet (invoked by the layout manager)
+    override fun getItemCount() = _dataSet.size
 
+    private fun addCommentView(viewHolder: PostViewHolder, comment: Comment) {
+        val commentView = LayoutInflater.from(viewHolder.postCommentLayout.context)
+            .inflate(R.layout.post_item_comment, viewHolder.postCommentLayout, false)
+
+        commentView.findViewById<TextView>(R.id.post_comment_author).text =
+            comment.author.username
+        commentView.findViewById<TextView>(R.id.post_comment_created_at).text =
+            comment.createdAt
+        commentView.findViewById<TextView>(R.id.post_comment_comment).text = comment.comment
+
+        viewHolder.postCommentLayout.addView(commentView)
+    }
 }
