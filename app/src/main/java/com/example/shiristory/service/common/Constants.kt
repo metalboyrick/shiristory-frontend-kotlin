@@ -9,3 +9,7 @@ object Constants {
     const val TIMELINE_API_PREFIX = "timeline"
 
 }
+
+object RequestCodes {
+    const val REQUEST_ADD_POST = 1001
+}
