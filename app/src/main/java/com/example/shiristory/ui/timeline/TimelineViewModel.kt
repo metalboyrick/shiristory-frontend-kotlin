@@ -85,4 +85,24 @@ class TimelineViewModel(private val _size: Int = 10) : ViewModel() {
         return _addCommentResponse
     }
 
+    fun likePost(post_id: String, dislike: Boolean = false) {
+        val call: Call<GenericResponse> =
+            if (!dislike) _service.likePost(post_id = post_id)
+            else _service.dislikePost(post_id = post_id)
+
+
+        call.enqueue(object : Callback<GenericResponse> {
+
+            override fun onFailure(call: Call<GenericResponse>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+
+            override fun onResponse(
+                call: Call<GenericResponse>,
+                response: Response<GenericResponse>
+            ) {
+                Log.d(TAG, response.body()?.message!!)
+            }
+        })
+    }
 }

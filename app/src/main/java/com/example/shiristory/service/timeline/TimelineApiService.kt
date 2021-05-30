@@ -23,4 +23,13 @@ interface TimelineApiService {
         @Body  json_body: String
     ): Call<Comment>
 
+    @POST("${TIMELINE_API_PREFIX}/{post_id}/like")
+    fun likePost(
+        @Path("post_id") post_id: String
+    ): Call<GenericResponse>
+
+    @POST("${TIMELINE_API_PREFIX}/{post_id}/dislike")
+    fun dislikePost(
+        @Path("post_id") post_id: String
+    ): Call<GenericResponse>
 }

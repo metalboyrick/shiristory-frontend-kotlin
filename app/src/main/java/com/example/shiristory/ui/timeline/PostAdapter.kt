@@ -76,6 +76,9 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         viewHolder.postAuthor.text = post.author.username
         viewHolder.postCreatedAt.text = post.createdAt
         viewHolder.postLikeCount.text = post.likes.size.toString()
+
+        // TODO: check if user has already liked
+
         viewHolder.postCommentCount.text = post.comments.size.toString()
 
         viewHolder.postCommentLayout.removeAllViews()
@@ -88,10 +91,14 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
             object : OnLikeListener {
                 override fun liked(likeButton: LikeButton) {
                     Log.d(TAG, "like " + post.content)
+                    _model.likePost(post.id)
+                    updateLikeCount(viewHolder, 1)
                 }
 
                 override fun unLiked(likeButton: LikeButton) {
-                    Log.d(TAG, "unlike" + post.content)
+                    Log.d(TAG, "dislike" + post.content)
+                    _model.likePost(post.id, dislike = true)
+                    updateLikeCount(viewHolder, -1)
                 }
             }
         )
@@ -111,31 +118,7 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         )
 
         viewHolder.postCommentSubmitButton.setOnClickListener(View.OnClickListener() {
-
-            val input: MaterialEditText = viewHolder.postCommentInput
-            val commentCountView: TextView = viewHolder.postCommentCount
-            val text: String = input.text.toString()
-
-            viewHolder.postCommentInput.clearFocus()
-
-            if (text.isNotEmpty()) {
-
-                Log.d(TAG, "clicked: " + post.id + " " + text)
-
-                val context: Context = viewHolder.postCommentLayout.context
-
-                _model.addComment(post_id = post.id, comment = text)
-                    .observe(context as LifecycleOwner, Observer {
-                        if (it != null) {
-                            addCommentView(viewHolder, it)
-                            commentCountView.text =
-                                (commentCountView.text.toString().toInt() + 1).toString()
-                            input.text?.clear()
-                            ToolKits.hideSoftKeyboard(context, input)
-                        }
-                    })
-            }
-
+            submitComment(viewHolder, post)
         })
 
         Glide.with(viewHolder.itemView).load(post.author.profilePicUrl)
@@ -157,5 +140,36 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         commentView.findViewById<TextView>(R.id.post_comment_comment).text = comment.comment
 
         viewHolder.postCommentLayout.addView(commentView)
+    }
+
+    private fun submitComment(viewHolder: PostViewHolder, post:Post){
+        val input: MaterialEditText = viewHolder.postCommentInput
+        val commentCountView: TextView = viewHolder.postCommentCount
+        val text: String = input.text.toString()
+
+        viewHolder.postCommentInput.clearFocus()
+
+        if (text.isNotEmpty()) {
+
+            Log.d(TAG, "clicked: " + post.id + " " + text)
+
+            val context: Context = viewHolder.postCommentLayout.context
+
+            _model.addComment(post_id = post.id, comment = text)
+                .observe(context as LifecycleOwner, Observer {
+                    if (it != null) {
+                        addCommentView(viewHolder, it)
+                        commentCountView.text =
+                            (commentCountView.text.toString().toInt() + 1).toString()
+                        input.text?.clear()
+                        ToolKits.hideSoftKeyboard(context, input)
+                    }
+                })
+        }
+    }
+
+    private fun updateLikeCount(viewHolder: PostViewHolder, increment:Int){
+        val likeCountView: TextView = viewHolder.postLikeCount
+        likeCountView.text = (likeCountView.text.toString().toInt() + increment).toString()
     }
 }
