@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.shiristory.service.common.RetrofitBuilder
+import com.example.shiristory.service.common.ToolKits.Companion.parseMultiPartFile
 import com.example.shiristory.service.common.models.GenericResponse
 import com.example.shiristory.service.user.UserApiService
 import com.example.shiristory.service.user.models.User
@@ -52,25 +53,22 @@ class ProfileViewModel : ViewModel() {
 
 
     fun updateUserProfile(
-        new_nickname : String,
+        new_nickname: String,
         new_bio: String,
         new_profile_pic_uri: Uri
-    ): LiveData<Boolean>
-    {
-        Log.d("new_nickname",new_nickname)
-        Log.d("new_bio",new_bio)
-        Log.d("new_profile_pic_uri",new_profile_pic_uri.getPath()!!)
+    ): LiveData<Boolean> {
+        Log.d("new_nickname", new_nickname)
+        Log.d("new_bio", new_bio)
+        Log.d("new_profile_pic_uri", new_profile_pic_uri.getPath()!!)
 
         _updateStatus.value = false
-        val file = File(new_profile_pic_uri.getPath()!!);// initialize file here
+        val profile_image: MultipartBody.Part = parseMultiPartFile(new_profile_pic_uri, "image/*")
 
-        val filePart : MultipartBody.Part = MultipartBody.Part.createFormData(file.getName(), file.getName(), RequestBody.create(
-            MediaType.parse("image/*"), file));
-        Log.d("file name",file.getName())
         val call: Call<GenericResponse> = _service.updateUserProfile(
-            new_nickname = RequestBody.create(MediaType.parse("multipart/form-data"),new_nickname),
-            new_bio = RequestBody.create(MediaType.parse("multipart/form-data"),new_bio),
-            new_profile_pic = filePart)
+            new_nickname = RequestBody.create(MediaType.parse("multipart/form-data"), new_nickname),
+            new_bio = RequestBody.create(MediaType.parse("multipart/form-data"), new_bio),
+            new_profile_pic = profile_image
+        )
         call.enqueue(object : Callback<GenericResponse> {
 
             override fun onFailure(call: Call<GenericResponse>, t: Throwable) {
@@ -83,7 +81,7 @@ class ProfileViewModel : ViewModel() {
             ) {
                 val userProfileResponse = response.body()
                 Log.d("user", "profile updated")
-                Log.d("update message",userProfileResponse?.message!!)
+                Log.d("update message", userProfileResponse?.message!!)
                 _updateStatus.value = true
 
             }

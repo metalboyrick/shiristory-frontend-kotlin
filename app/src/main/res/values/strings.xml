@@ -6,7 +6,7 @@
     <string name="title_profile">Profile</string>
     <string name="edit_profile">Edit profile</string>
     <string name="logout">Logout</string>
-    <string name="upload_image">Upload</string>
+    <string name="upload_image">Change profile picture</string>
     <string name="update_profile">Update</string>
     <string name="post_comment_hint">Write a comment...</string>
     <!--

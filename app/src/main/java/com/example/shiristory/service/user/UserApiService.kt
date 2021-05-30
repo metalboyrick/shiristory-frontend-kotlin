@@ -18,8 +18,8 @@ interface UserApiService {
     @Multipart
     @PUT("${USER_API_PREFIX}/profile")
     fun updateUserProfile(
-        @Part("new_nickname") new_nickname: RequestBody ,
-        @Part("new_bio") new_bio : RequestBody,
-        @Part new_profile_pic : MultipartBody.Part
+        @Part("new_nickname") new_nickname: RequestBody,
+        @Part("new_bio") new_bio: RequestBody,
+        @Part new_profile_pic: MultipartBody.Part
     ): Call<GenericResponse>
 }

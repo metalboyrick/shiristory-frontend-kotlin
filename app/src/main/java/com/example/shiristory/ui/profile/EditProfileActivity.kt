@@ -17,14 +17,14 @@ import lv.chi.photopicker.ChiliPhotoPicker
 import lv.chi.photopicker.PhotoPickerFragment
 
 
-class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback{
+class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback {
 
     private val _model: ProfileViewModel by viewModels()
 
-    private var profile_picture_preview : ImageView? = null;
-    private var new_nickname : MaterialEditText? = null
-    private var new_bio : MaterialEditText? = null
-    private var new_profile_pic_uri : Uri? = null
+    private var profile_picture_preview: ImageView? = null;
+    private var new_nickname: MaterialEditText? = null
+    private var new_bio: MaterialEditText? = null
+    private var new_profile_pic_uri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +40,18 @@ class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback{
 
         new_nickname = findViewById(R.id.new_nickname)
         new_bio = findViewById(R.id.new_bio)
-        profile_picture_preview = findViewById(R.id.profile_picture_preview)
+        profile_picture_preview = findViewById(R.id.profile_picture)
+
+        val old_nickname = intent.getStringExtra("nickname")
+        val old_bio = intent.getStringExtra("bio")
+        val old_profile_pic_url = intent.getStringExtra("profile_pic_url")
+
+        new_nickname?.setText(old_nickname)
+        new_bio?.setText(old_bio)
+        Glide.with(this).load(old_profile_pic_url).into(profile_picture_preview!!)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) : Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.getItemId() == android.R.id.home) {
             finish();
         }
@@ -66,7 +74,7 @@ class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback{
         Glide.with(this).load(photos[0]).into(profile_picture_preview!!)
     }
 
-    fun submitUserProfileUpdate(view: View){
+    fun submitUserProfileUpdate(view: View) {
         _model.updateUserProfile(
             new_nickname?.getText().toString(),
             new_bio?.getText().toString(),

@@ -9,7 +9,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.shiristory.ui.profile.EditProfileActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,8 +32,5 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
-    fun openEditProfileDialog(view : View) {
-        val intent = Intent(this, EditProfileActivity::class.java)
-        startActivity(intent)
-    }
+
 }
