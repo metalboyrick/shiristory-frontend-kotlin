@@ -64,6 +64,7 @@ class TimelineFragment : Fragment() {
             R.id.action_add_post -> {
                 val intent = Intent(activity, AddPostActivity::class.java)
                 startActivityForResult(intent, RequestCodes.REQUEST_ADD_POST)
+                activity?.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
 
             else -> {
