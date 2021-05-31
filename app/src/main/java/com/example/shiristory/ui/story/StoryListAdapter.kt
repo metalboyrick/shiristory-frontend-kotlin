@@ -1,4 +1,4 @@
-package com.example.shiristory.ui.timeline
+package com.example.shiristory.ui.story
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shiristory.R
-import com.example.shiristory.service.timeline.models.StoryListEntry
+import com.example.shiristory.service.story.models.StoryListEntry
+import com.example.shiristory.ui.story.StoryViewModel
 
 
-class StoryListAdapter(private val _dataSet: List<StoryListEntry>) :
+class StoryListAdapter(private val _dataSet: List<StoryListEntry>, private val _model: StoryViewModel) :
     RecyclerView.Adapter<StoryListAdapter.StoryListViewHolder>() {
 
     private val TAG = this.javaClass.name
