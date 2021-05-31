@@ -22,4 +22,10 @@ interface UserApiService {
         @Part("new_bio") new_bio: RequestBody,
         @Part new_profile_pic: MultipartBody.Part
     ): Call<GenericResponse>
+
+    @Headers("Content-Type: application/json")
+    @POST("${USER_API_PREFIX}/friends/add/{friend_username}")
+    fun addFriend(
+        @Path("friend_username") friend_username: String
+    ): Call<GenericResponse>
 }
