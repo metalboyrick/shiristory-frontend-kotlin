@@ -101,7 +101,10 @@ class ContactFragment : Fragment() {
         }
 
         submit_button.setOnClickListener {
-            val v : View = it
+            if(input.text.length == 0){
+                // lambda function
+                return@setOnClickListener
+            }
             Log.d("Friend OP", friend_op_name)
             if (friend_op_name == "Search") {
                 Log.d("search friend", "Search friend API called")
@@ -109,12 +112,15 @@ class ContactFragment : Fragment() {
             } else if (friend_op_name == "Add") {
                 _model.addFriend(input.text.toString())
                     .observe(viewLifecycleOwner, Observer {
-                        val statusCode = it
+                        Log.d("status code received by observer",it[0])
+                        val statusCode = Integer.parseInt(it[0])
+                        val message : String? = it[1]
+                        Log.d("message received by observer",message!!)
                         if (statusCode == 200) {
-                            Log.d("add friend status","200")
                             getFriends()
                             dialog.dismiss()
                         }
+                        server_message.setText(message)
                     })
             }
         }
@@ -124,7 +130,7 @@ class ContactFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getFriends(){
+    fun getFriends(){
         _model.getFriends().observe(viewLifecycleOwner, Observer {
             _recyclerView.adapter = FriendAdapter(it, _model)
         })

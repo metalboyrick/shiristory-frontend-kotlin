@@ -55,20 +55,30 @@ class ProfileViewModel : ViewModel() {
     fun updateUserProfile(
         new_nickname: String,
         new_bio: String,
-        new_profile_pic_uri: Uri
+        new_profile_pic_uri: Uri = Uri.EMPTY
     ): LiveData<Boolean> {
         Log.d("new_nickname", new_nickname)
         Log.d("new_bio", new_bio)
         Log.d("new_profile_pic_uri", new_profile_pic_uri.getPath()!!)
 
-        _updateStatus.value = false
-        val profile_image: MultipartBody.Part = parseMultiPartFile(new_profile_pic_uri, "image/*")
+        val call: Call<GenericResponse>
+        if(new_profile_pic_uri == Uri.EMPTY){
+            call = _service.updateUserProfile(
+                new_nickname = RequestBody.create(MediaType.parse("multipart/form-data"), new_nickname),
+                new_bio = RequestBody.create(MediaType.parse("multipart/form-data"), new_bio)
+            )
+        }
+        else{
+            val profile_image: MultipartBody.Part = parseMultiPartFile(new_profile_pic_uri, "image/*")
 
-        val call: Call<GenericResponse> = _service.updateUserProfile(
-            new_nickname = RequestBody.create(MediaType.parse("multipart/form-data"), new_nickname),
-            new_bio = RequestBody.create(MediaType.parse("multipart/form-data"), new_bio),
-            new_profile_pic = profile_image
-        )
+            call = _service.updateUserProfile(
+                new_nickname = RequestBody.create(MediaType.parse("multipart/form-data"), new_nickname),
+                new_bio = RequestBody.create(MediaType.parse("multipart/form-data"), new_bio),
+                new_profile_pic = profile_image
+            )
+        }
+        _updateStatus.value = false
+
         call.enqueue(object : Callback<GenericResponse> {
 
             override fun onFailure(call: Call<GenericResponse>, t: Throwable) {
