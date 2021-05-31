@@ -33,7 +33,8 @@
         <activity
             android:name=".ui.timeline.AddPostActivity"
             android:label="@string/post_add_title"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize">
         </activity>
 
     </application>

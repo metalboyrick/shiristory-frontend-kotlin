@@ -1,16 +1,20 @@
 package com.example.shiristory.ui.timeline
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.shiristory.service.common.MediaType
 import com.example.shiristory.service.common.RetrofitBuilder
+import com.example.shiristory.service.common.ToolKits
 import com.example.shiristory.service.common.models.GenericResponse
 import com.example.shiristory.service.timeline.TimelineApiService
 import com.example.shiristory.service.timeline.models.Comment
 import com.example.shiristory.service.timeline.models.Post
 import com.example.shiristory.service.timeline.models.PostsResponse
 import com.google.gson.Gson
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,6 +27,7 @@ class TimelineViewModel(private val _size: Int = 10) : ViewModel() {
     private var _postPageMap: HashMap<Int, ArrayList<Post>> = HashMap<Int, ArrayList<Post>>()
     private var _postResponse: MutableLiveData<List<Post>> = MutableLiveData<List<Post>>()
     private var _addCommentResponse: MutableLiveData<Comment> = MutableLiveData<Comment>()
+    private var _addPostResponse: MutableLiveData<Post> = MutableLiveData<Post>()
 
     private val _service: TimelineApiService = RetrofitBuilder.timelineApiService
 
@@ -62,11 +67,44 @@ class TimelineViewModel(private val _size: Int = 10) : ViewModel() {
         })
     }
 
+    fun addPost(content: String, media_type: MediaType?, media_uri: Uri?): LiveData<Post> {
+
+        _addPostResponse.value = null
+
+        val call: Call<Post> = if (media_type != null && media_uri != null) {
+            _service.addPost(
+                content = ToolKits.parseMultiPartFormData(content),
+                media_type = ToolKits.parseMultiPartFormData(media_type.value),
+                media = ToolKits.parseMultiPartFile(media_uri, media_type.value)
+            )
+        } else {
+            _service.addPost(
+                content = ToolKits.parseMultiPartFormData(content)
+            )
+        }
+
+
+        call.enqueue(object : Callback<Post> {
+
+            override fun onFailure(call: Call<Post>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+
+            override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                _addPostResponse.value = response.body()
+            }
+        })
+
+        return _addPostResponse
+    }
+
     fun addComment(post_id: String, comment: String): LiveData<Comment> {
         val data = mapOf("comment" to comment)
 
         val call: Call<Comment> =
             _service.addComment(post_id = post_id, json_body = Gson().toJson(data))
+
+        _addCommentResponse.value = null
 
         call.enqueue(object : Callback<Comment> {
 

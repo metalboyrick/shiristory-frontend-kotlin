@@ -17,7 +17,7 @@ class ToolKits {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
-        fun parseMultiPartFile(path: Uri, mediaType : String): MultipartBody.Part {
+        fun parseMultiPartFile(path: Uri, mediaType: String): MultipartBody.Part {
             val file = File(path.path!!)
 
             return MultipartBody.Part.createFormData(
@@ -25,6 +25,10 @@ class ToolKits {
                     MediaType.parse(mediaType), file
                 )
             )
+        }
+
+        fun parseMultiPartFormData(data: String): RequestBody {
+            return RequestBody.create(okhttp3.MediaType.parse("multipart/form-data"), data)
         }
     }
 }
