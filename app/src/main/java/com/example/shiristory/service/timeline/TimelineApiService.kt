@@ -20,7 +20,7 @@ interface TimelineApiService {
     ): Call<PostsResponse>
 
     @Multipart
-    @PUT("${TIMELINE_API_PREFIX}/create")
+    @POST("${TIMELINE_API_PREFIX}/create")
     fun addPost(
         @Part("content") content: RequestBody,
         @Part("media_type") media_type : RequestBody? = null,

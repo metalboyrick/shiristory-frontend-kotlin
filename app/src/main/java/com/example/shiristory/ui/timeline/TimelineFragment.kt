@@ -21,6 +21,7 @@ import com.example.shiristory.R
 import com.example.shiristory.service.common.RequestCodes
 import com.example.shiristory.service.timeline.models.Post
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.gson.Gson
 
 
 class TimelineFragment : Fragment() {
@@ -50,7 +51,7 @@ class TimelineFragment : Fragment() {
 
         _model.getPosts(_page)?.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                _recyclerView.adapter = PostAdapter(it, _model)
+                _recyclerView.adapter = PostAdapter(ArrayList(it), _model)
             }
         })
     }
@@ -89,11 +90,15 @@ class TimelineFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 RequestCodes.REQUEST_ADD_POST -> {
-                    if (resultCode === Activity.RESULT_OK) {
-                        true
-                    }
-                    if (resultCode === Activity.RESULT_CANCELED) {
-                        true
+                    if (resultCode == Activity.RESULT_OK && data != null) {
+                        (_recyclerView.adapter as PostAdapter).addPost(
+                            Gson().fromJson(
+                                data.getStringExtra(
+                                    "post"
+                                ), Post::class.java
+                            )
+                        )
+                        _recyclerView.smoothScrollToPosition(0)
                     }
                 }
 

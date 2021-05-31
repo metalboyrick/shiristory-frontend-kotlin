@@ -22,6 +22,7 @@ import com.example.shiristory.R
 import com.example.shiristory.service.common.MediaType
 import com.example.shiristory.service.common.ToolKits
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
 
 
@@ -62,13 +63,13 @@ class AddPostActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
 
-            android.R.id.home ->{
+            android.R.id.home -> {
                 finishWithAnimation()
             }
 
             R.id.action_submit_post -> {
 
-                if (_contentInput.text.toString().isEmpty()){
+                if (_contentInput.text.toString().isEmpty()) {
                     Toast.makeText(this, "Post can't empty", Toast.LENGTH_SHORT).show()
                     return true
                 }
@@ -82,6 +83,7 @@ class AddPostActivity : AppCompatActivity() {
                 ).observe(this, Observer {
                     if (it != null) {
                         val intent = Intent()
+                        intent.putExtra("post", Gson().toJson(it))
                         setResult(Activity.RESULT_OK, intent)
                         finishWithAnimation()
                     }
@@ -113,7 +115,7 @@ class AddPostActivity : AppCompatActivity() {
 
     }
 
-    private fun finishWithAnimation(){
+    private fun finishWithAnimation() {
         finish()
         overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom)
     }

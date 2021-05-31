@@ -22,11 +22,15 @@ import com.rengwuxian.materialedittext.MaterialEditText
 import de.hdodenhof.circleimageview.CircleImageView
 
 
-class PostAdapter(private val _dataSet: List<Post>, private val _model: TimelineViewModel) :
+class PostAdapter(private val _dataSet: ArrayList<Post>, private val _model: TimelineViewModel) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private val TAG = this.javaClass.name
 
+    fun addPost(post:Post){
+        _dataSet.add(0, post)
+        this.notifyItemInserted(0)
+    }
 
     // Return the size of your _dataSet (invoked by the layout manager)
     override fun getItemCount() = _dataSet.size
