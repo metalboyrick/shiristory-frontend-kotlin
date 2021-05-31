@@ -17,7 +17,7 @@ import com.example.shiristory.service.timeline.models.Post
 
 
 class TimelineFragment : Fragment() {
-
+    private val TAG = this.javaClass.name
     private val _model: TimelineViewModel by viewModels()
     private val _page: Int = 1
     private lateinit var _recyclerView: RecyclerView
@@ -64,7 +64,7 @@ class TimelineFragment : Fragment() {
             R.id.action_add_post -> {
                 val intent = Intent(activity, AddPostActivity::class.java)
                 startActivityForResult(intent, RequestCodes.REQUEST_ADD_POST)
-                activity?.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+                activity?.overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold)
             }
 
             else -> {
@@ -77,6 +77,8 @@ class TimelineFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d(TAG, requestCode.toString())
+        Log.d(TAG, resultCode.toString())
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 RequestCodes.REQUEST_ADD_POST -> {
