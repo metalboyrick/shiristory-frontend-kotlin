@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -15,11 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
+import com.example.shiristory.service.common.FileUtil
+import com.example.shiristory.service.common.FileUtil.Companion.trimCache
 import com.example.shiristory.service.common.MediaType
 import com.example.shiristory.service.common.RequestCodes
 import com.example.shiristory.service.common.RequestCodes.REQUEST_MEDIA_PICKER_SELECT
 import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
+import java.io.File
 
 
 class AddPostActivity : AppCompatActivity() {
@@ -58,6 +60,11 @@ class AddPostActivity : AppCompatActivity() {
         })
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        trimCache(this)
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
@@ -138,7 +145,6 @@ class AddPostActivity : AppCompatActivity() {
                     if (resultCode == Activity.RESULT_OK && data != null) {
 
                         _mediaUri = data.data
-                        Log.d("wae", _mediaUri?.path!!)
 
                         if (_mediaUri.toString().contains("image")) {
                             _mediaType = MediaType.IMAGE
@@ -154,8 +160,13 @@ class AddPostActivity : AppCompatActivity() {
                             _postAddVideoView.visibility = View.VISIBLE
                             _postAddVideoView.setVideoURI(_mediaUri)
 
-
                         }
+
+                        val outputDir: File = FileUtil.from(this, _mediaUri!!)
+
+                        val a: String = outputDir.path
+
+                        _mediaUri = Uri.parse(a)
                     }
                 }
 
@@ -169,4 +180,6 @@ class AddPostActivity : AppCompatActivity() {
         finish()
         overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom)
     }
+
 }
+
