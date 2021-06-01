@@ -1,9 +1,14 @@
 package com.example.shiristory.ui.timeline
 
+import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -11,6 +16,8 @@ import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
@@ -18,6 +25,7 @@ import com.example.shiristory.service.common.FileUtil
 import com.example.shiristory.service.common.FileUtil.Companion.trimCache
 import com.example.shiristory.service.common.MediaType
 import com.example.shiristory.service.common.RequestCodes
+import com.example.shiristory.service.common.RequestCodes.REQUEST_MEDIA_CAMERA_CAPTURE
 import com.example.shiristory.service.common.RequestCodes.REQUEST_MEDIA_PICKER_SELECT
 import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
@@ -59,7 +67,6 @@ class AddPostActivity : AppCompatActivity() {
             recordVideo()
         })
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -119,7 +126,6 @@ class AddPostActivity : AppCompatActivity() {
         return true
     }
 
-
     private fun selectMedia() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -130,7 +136,16 @@ class AddPostActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {
-
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.CAMERA),
+                1234)
+            startActivityForResult(takePictureIntent, REQUEST_MEDIA_CAMERA_CAPTURE)
+        } catch (e: ActivityNotFoundException) {
+            // display error state to the user
+            Log.d("WEE", e.toString())
+        }
     }
 
     private fun recordVideo() {
@@ -162,11 +177,18 @@ class AddPostActivity : AppCompatActivity() {
 
                         }
 
-                        val outputDir: File = FileUtil.from(this, _mediaUri!!)
+                        val file: File = FileUtil.from(this, _mediaUri!!)
 
-                        val a: String = outputDir.path
+                        _mediaUri = Uri.parse(file.path)
+                    }
+                }
 
-                        _mediaUri = Uri.parse(a)
+                RequestCodes.REQUEST_MEDIA_CAMERA_CAPTURE -> {
+                    if (resultCode == Activity.RESULT_OK && data != null){
+                        val imageBitmap = data.extras?.get("data") as Bitmap
+                        _postAddImageView.visibility = View.VISIBLE
+                        _postAddVideoView.visibility = View.GONE
+                        _postAddImageView.setImageBitmap(imageBitmap)
                     }
                 }
 
