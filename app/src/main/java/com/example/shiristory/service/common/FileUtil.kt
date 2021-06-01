@@ -2,9 +2,12 @@ package com.example.shiristory.service.common
 
 import android.content.Context
 import android.net.Uri
+import android.os.Environment
 import android.provider.OpenableColumns
 import android.util.Log
 import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FileUtil {
 
@@ -79,10 +82,16 @@ class FileUtil {
             val newFile = File(file.parent, newName)
             if (newFile != file) {
                 if (newFile.exists() && newFile.delete()) {
-                    Log.d("com.example.shiristory.service.common.FileUtil", "Delete old $newName file")
+                    Log.d(
+                        "com.example.shiristory.service.common.FileUtil",
+                        "Delete old $newName file"
+                    )
                 }
                 if (file.renameTo(newFile)) {
-                    Log.d("com.example.shiristory.service.common.FileUtil", "Rename file to $newName")
+                    Log.d(
+                        "com.example.shiristory.service.common.FileUtil",
+                        "Rename file to $newName"
+                    )
                 }
             }
             return newFile
@@ -103,8 +112,12 @@ class FileUtil {
         fun trimCache(context: Context) {
             try {
                 val dir = context.cacheDir
+                val dirExt = context.externalCacheDir
                 if (dir != null && dir.isDirectory) {
                     deleteDir(dir)
+                }
+                if (dirExt != null && dirExt.isDirectory) {
+                    deleteDir(dirExt)
                 }
             } catch (e: java.lang.Exception) {
                 // TODO: handle exception

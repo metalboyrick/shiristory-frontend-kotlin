@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
@@ -18,6 +19,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
@@ -27,9 +29,13 @@ import com.example.shiristory.service.common.MediaType
 import com.example.shiristory.service.common.RequestCodes
 import com.example.shiristory.service.common.RequestCodes.REQUEST_MEDIA_CAMERA_CAPTURE
 import com.example.shiristory.service.common.RequestCodes.REQUEST_MEDIA_PICKER_SELECT
+import com.example.shiristory.service.common.RequestCodes.REQUEST_MEDIA_VIDEO_RECORD
 import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
 import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class AddPostActivity : AppCompatActivity() {
@@ -136,64 +142,96 @@ class AddPostActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.CAMERA),
-                1234)
-            startActivityForResult(takePictureIntent, REQUEST_MEDIA_CAMERA_CAPTURE)
-        } catch (e: ActivityNotFoundException) {
-            // display error state to the user
-            Log.d("WEE", e.toString())
+
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.CAMERA),
+            1234
+        )
+
+
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+
+            // Create the File where the photo should go
+            val photoFile: File? = try {
+                val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+                File.createTempFile(
+                    "JPEG_${timeStamp}_tmp", /* prefix */
+                    ".jpg", /* suffix */
+                    externalCacheDir /* directory */
+                )
+            } catch (ex: IOException) {
+                null
+            }
+            Log.d("WWW", photoFile?.path!!)
+            // Continue only if the File was successfully created
+            photoFile?.also {
+                _mediaUri = FileProvider.getUriForFile(
+                    this,
+                    "com.example.shiristory.fileprovider",
+                    it
+                )
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, _mediaUri)
+                startActivityForResult(takePictureIntent, REQUEST_MEDIA_CAMERA_CAPTURE)
+            }
+
         }
     }
 
     private fun recordVideo() {
-
-        startActivityForResult(Intent(MediaStore.ACTION_VIDEO_CAPTURE), REQUEST_MEDIA_PICKER_SELECT)
+        startActivityForResult(Intent(MediaStore.ACTION_VIDEO_CAPTURE), REQUEST_MEDIA_VIDEO_RECORD)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
 
-                RequestCodes.REQUEST_MEDIA_PICKER_SELECT -> {
-                    if (resultCode == Activity.RESULT_OK && data != null) {
+        when (requestCode) {
 
-                        _mediaUri = data.data
+            REQUEST_MEDIA_PICKER_SELECT, REQUEST_MEDIA_VIDEO_RECORD -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
 
-                        if (_mediaUri.toString().contains("image")) {
-                            _mediaType = MediaType.IMAGE
-                            _postAddImageView.visibility = View.VISIBLE
-                            _postAddVideoView.visibility = View.GONE
+                    _mediaUri = data.data
 
-                            Glide.with(this).load(_mediaUri)
-                                .into(_postAddImageView)
-
-                        } else if (_mediaUri.toString().contains("video")) {
-                            _mediaType = MediaType.VIDEO
-                            _postAddImageView.visibility = View.GONE
-                            _postAddVideoView.visibility = View.VISIBLE
-                            _postAddVideoView.setVideoURI(_mediaUri)
-
-                        }
-
-                        val file: File = FileUtil.from(this, _mediaUri!!)
-
-                        _mediaUri = Uri.parse(file.path)
-                    }
-                }
-
-                RequestCodes.REQUEST_MEDIA_CAMERA_CAPTURE -> {
-                    if (resultCode == Activity.RESULT_OK && data != null){
-                        val imageBitmap = data.extras?.get("data") as Bitmap
+                    if (_mediaUri.toString().contains("image")) {
+                        _mediaType = MediaType.IMAGE
                         _postAddImageView.visibility = View.VISIBLE
                         _postAddVideoView.visibility = View.GONE
-                        _postAddImageView.setImageBitmap(imageBitmap)
-                    }
-                }
 
+                        Glide.with(this).load(_mediaUri)
+                            .into(_postAddImageView)
+
+                    } else if (_mediaUri.toString().contains("video")) {
+                        _mediaType = MediaType.VIDEO
+                        _postAddImageView.visibility = View.GONE
+                        _postAddVideoView.visibility = View.VISIBLE
+                        _postAddVideoView.setVideoURI(_mediaUri)
+
+                    }
+
+                    val file: File = FileUtil.from(this, _mediaUri!!)
+
+                    _mediaUri = Uri.parse(file.path)
+                    Log.d("WWW", _mediaUri?.path!!)
+                }
             }
+
+            REQUEST_MEDIA_CAMERA_CAPTURE -> {
+                if (data != null) {
+                    Log.d("WWW", _mediaUri?.path!!)
+                    _mediaType = MediaType.IMAGE
+                    _postAddImageView.visibility = View.VISIBLE
+                    _postAddVideoView.visibility = View.GONE
+
+                    Glide.with(this).load(_mediaUri)
+                        .into(_postAddImageView)
+//                    val imageBitmap = data.extras?.get("data") as Bitmap
+//                    _postAddImageView.visibility = View.VISIBLE
+//                    _postAddVideoView.visibility = View.GONE
+//                    _postAddImageView.setImageBitmap(imageBitmap)
+                }
+            }
+
+
         }
 
         super.onActivityResult(requestCode, resultCode, data)
