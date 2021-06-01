@@ -7,17 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shiristory.R
-import com.example.shiristory.service.story.models.StoryListEntry
-import com.example.shiristory.ui.timeline.PostAdapter
 
-class StoryFragment : Fragment() {
+class StoryListFragment : Fragment() {
 
     private val _page: Int = 1
-    private val _model: StoryViewModel by viewModels()
+    private val _size: Int = 6
+    private val _model: StoryListViewModel by viewModels()
     private lateinit var _recyclerView: RecyclerView
 
     override fun onCreateView(
@@ -25,7 +23,7 @@ class StoryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val model: StoryViewModel by viewModels()
+        val model: StoryListViewModel by viewModels()
         val root = inflater.inflate(R.layout.fragment_story, container, false)
         return root
     }
@@ -42,7 +40,7 @@ class StoryFragment : Fragment() {
         _recyclerView = view.findViewById(R.id.story_list_recyclerview)
         _recyclerView.layoutManager = LinearLayoutManager(context)
 
-        _model.getGroups(_page, cache = true)?.observe(viewLifecycleOwner, Observer {
+        _model.getGroups(_page, _size,cache = true)?.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 _recyclerView.adapter = StoryListAdapter(it, _model)
             }

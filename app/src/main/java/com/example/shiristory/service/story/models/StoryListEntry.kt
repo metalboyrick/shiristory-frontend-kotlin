@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class StoryListEntry (
     @SerializedName("group_id")
-    val group_id: String,
+    val groupId: String,
     @SerializedName("group_name")
     val name : String,
     @SerializedName("group_summary")

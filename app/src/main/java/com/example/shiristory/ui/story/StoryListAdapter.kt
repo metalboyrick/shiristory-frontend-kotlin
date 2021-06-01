@@ -1,16 +1,18 @@
 package com.example.shiristory.ui.story
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shiristory.R
 import com.example.shiristory.service.story.models.StoryListEntry
-import com.example.shiristory.ui.story.StoryViewModel
 
 
-class StoryListAdapter(private val _dataSet: List<StoryListEntry>, private val _model: StoryViewModel) :
+class StoryListAdapter(private val _dataSet: List<StoryListEntry>, private val _model: StoryListViewModel) :
     RecyclerView.Adapter<StoryListAdapter.StoryListViewHolder>() {
 
     private val TAG = this.javaClass.name
@@ -24,6 +26,7 @@ class StoryListAdapter(private val _dataSet: List<StoryListEntry>, private val _
         val storyName: TextView = view.findViewById(R.id.story_name)
         val storySummary: TextView = view.findViewById(R.id.story_summary)
         val storyLastEdited: TextView = view.findViewById(R.id.story_last_edited)
+        val storyEntry: CardView = view.findViewById(R.id.story_entry_card)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -47,6 +50,15 @@ class StoryListAdapter(private val _dataSet: List<StoryListEntry>, private val _
         viewHolder.storyName.text = storyListEntry.name
         viewHolder.storySummary.text = storyListEntry.summary
         viewHolder.storyLastEdited.text = storyListEntry.lastEdited
+        val storyId: String = storyListEntry.groupId
+
+        // navigate to the appropriate story page
+        viewHolder.storyEntry.setOnClickListener {
+            val storyIntent = Intent(it.context, StoryActivity::class.java).apply{
+                putExtra("storyId", storyId)
+            }
+            startActivity(it.context, storyIntent, null)
+        }
 
     }
 
