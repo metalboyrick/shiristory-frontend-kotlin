@@ -4,6 +4,7 @@ import com.example.shiristory.service.common.Constants
 import com.example.shiristory.service.common.Constants.USER_API_PREFIX
 import com.example.shiristory.service.common.models.GenericResponse
 import com.example.shiristory.service.timeline.models.Comment
+import com.example.shiristory.service.user.models.SearchFriendResponse
 import com.example.shiristory.service.user.models.UserProfileResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -40,4 +41,9 @@ interface UserApiService {
     fun removeFriend(
         @Path("friend_id") friend_id: String
     ): Call<GenericResponse>
+
+    @GET("${USER_API_PREFIX}/friends/search/{friend_nickname}")
+    fun searchFriend(
+        @Path("friend_nickname") friend_nickname: String
+    ): Call<SearchFriendResponse>
 }

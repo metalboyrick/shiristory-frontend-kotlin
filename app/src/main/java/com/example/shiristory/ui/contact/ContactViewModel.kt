@@ -9,6 +9,7 @@ import com.example.shiristory.service.common.RetrofitBuilder
 import com.example.shiristory.service.common.models.APIError
 import com.example.shiristory.service.common.models.GenericResponse
 import com.example.shiristory.service.user.UserApiService
+import com.example.shiristory.service.user.models.SearchFriendResponse
 import com.example.shiristory.service.user.models.User
 import com.example.shiristory.service.user.models.UserProfileResponse
 import com.google.gson.Gson
@@ -22,6 +23,7 @@ class ContactViewModel : ViewModel() {
     private var _friends: MutableLiveData<ArrayList<User>> = MutableLiveData<ArrayList<User>>();
     private var _addFriendStatus : MutableLiveData<ArrayList<String>> = MutableLiveData<ArrayList<String>>()
     private var _removeFriendStatus : MutableLiveData<ArrayList<String>> = MutableLiveData<ArrayList<String>>()
+    private var _searchFriendStatus : MutableLiveData<ArrayList<String>> = MutableLiveData<ArrayList<String>>()
     private val _service: UserApiService = RetrofitBuilder.userApiService
 
     // We will call this method to get the data
@@ -31,7 +33,7 @@ class ContactViewModel : ViewModel() {
         call.enqueue(object : Callback<UserProfileResponse> {
 
             override fun onFailure(call: Call<UserProfileResponse>, t: Throwable) {
-                Log.d("user", t.message!!)
+                Log.d("get friends", t.message!!)
             }
 
             override fun onResponse(
@@ -100,7 +102,7 @@ class ContactViewModel : ViewModel() {
         call.enqueue(object : Callback<GenericResponse> {
 
             override fun onFailure(call: Call<GenericResponse>, t: Throwable) {
-                Log.d("user", t.message!!)
+                Log.d("add friend", t.message!!)
             }
 
             override fun onResponse(
@@ -124,7 +126,7 @@ class ContactViewModel : ViewModel() {
         call.enqueue(object : Callback<GenericResponse> {
 
             override fun onFailure(call: Call<GenericResponse>, t: Throwable) {
-                Log.d("user", t.message!!)
+                Log.d("remove friend", t.message!!)
             }
 
             override fun onResponse(
@@ -141,5 +143,29 @@ class ContactViewModel : ViewModel() {
         })
 
         return _removeFriendStatus
+    }
+
+    fun searchFriend(friendNickname : String) : LiveData<ArrayList<User>>{
+        val call: Call<SearchFriendResponse> = _service.searchFriend(friend_nickname = friendNickname)
+        call.enqueue(object : Callback<SearchFriendResponse> {
+
+            override fun onFailure(call: Call<SearchFriendResponse>, t: Throwable) {
+                Log.d("search friend", t.message!!)
+            }
+
+            override fun onResponse(
+                call: Call<SearchFriendResponse>,
+                response: Response<SearchFriendResponse>
+            ) {
+
+                val searchFriendResponse = response.body()
+                Log.d("user", "search friend data received")
+
+                _friends.value = searchFriendResponse?.friends
+
+
+            }
+        })
+        return _friends
     }
 }

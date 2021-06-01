@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -108,7 +109,11 @@ class ContactFragment : Fragment() {
             Log.d("Friend OP", friend_op_name)
             if (friend_op_name == "Search") {
                 Log.d("search friend", "Search friend API called")
-                //_model.addFriend(input.text.toString())
+                var res : LiveData<ArrayList<User>> = _model.searchFriend(input.text.toString())
+                res.observe(viewLifecycleOwner, Observer {
+                        _recyclerView.adapter = FriendAdapter(it, _model)
+                        dialog.dismiss()
+                    })
             } else if (friend_op_name == "Add") {
                 _model.addFriend(input.text.toString())
                     .observe(viewLifecycleOwner, Observer {
@@ -131,7 +136,9 @@ class ContactFragment : Fragment() {
     }
 
     fun getFriends(){
-        _model.getFriends().observe(viewLifecycleOwner, Observer {
+        var res : LiveData<ArrayList<User>> = _model.getFriends()
+
+        res.observe(viewLifecycleOwner, Observer {
             _recyclerView.adapter = FriendAdapter(it, _model)
         })
     }
