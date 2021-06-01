@@ -150,6 +150,7 @@ class AddPostActivity : AppCompatActivity() {
 
     private fun recordVideo() {
 
+        startActivityForResult(Intent(MediaStore.ACTION_VIDEO_CAPTURE), REQUEST_MEDIA_PICKER_SELECT)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
