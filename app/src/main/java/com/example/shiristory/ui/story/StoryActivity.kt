@@ -11,8 +11,6 @@ class StoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_story)
 
-        actionBar?.setDisplayHomeAsUpEnabled(true);
-
         val storyIntent = intent
         val msg: String? = storyIntent.getStringExtra("storyId")
         if (msg != null) {

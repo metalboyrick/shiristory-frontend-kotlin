@@ -37,7 +37,7 @@ class StoryListAdapter(private val _dataSet: List<StoryListEntry>, private val _
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): StoryListViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.story_item, viewGroup, false)
+            .inflate(R.layout.story_list_item, viewGroup, false)
 
         return StoryListViewHolder(view)
     }
