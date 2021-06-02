@@ -33,20 +33,21 @@
 
             <ImageButton
                 android:id="@+id/voicemail_btn"
-                android:layout_width="40dp"
+                android:layout_width="0px"
                 android:layout_height="40dp"
-                android:layout_weight="0"
+                android:layout_weight="1"
                 android:background="@drawable/round_corner"
                 android:src="@drawable/ic_microphone" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/write_message_section"
-                android:layout_width="wrap_content"
+                android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="0dp"
+                android:layout_weight="7"
                 app:cardBackgroundColor="#EEEEEE"
                 app:cardCornerRadius="30dp"
                 app:cardElevation="0dp">
@@ -94,9 +95,9 @@
 
             <ImageButton
                 android:id="@+id/send_btn"
-                android:layout_width="40dp"
+                android:layout_width="0px"
                 android:layout_height="40dp"
-                android:layout_weight="0"
+                android:layout_weight="1"
                 android:background="@drawable/round_corner"
                 android:src="@drawable/ic_send_white" />
 
