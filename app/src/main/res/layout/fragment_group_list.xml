@@ -6,7 +6,7 @@
     android:background="@color/alice_blue_50">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/story_list_recyclerview"
+        android:id="@+id/group_list_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

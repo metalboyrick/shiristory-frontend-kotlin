@@ -2,7 +2,7 @@ package com.example.shiristory.service.story.models
 
 import com.google.gson.annotations.SerializedName
 
-data class StoryListEntry (
+data class GroupListEntry (
     @SerializedName("group_id")
     val groupId: String,
     @SerializedName("group_name")

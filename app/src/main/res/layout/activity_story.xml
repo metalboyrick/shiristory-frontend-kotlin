@@ -18,6 +18,7 @@
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/story_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="13"

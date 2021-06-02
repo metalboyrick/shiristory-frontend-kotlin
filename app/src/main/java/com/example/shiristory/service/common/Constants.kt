@@ -10,6 +10,6 @@ object Constants {
     const val STORY_API_PREFIX = "story"
 
     // DEBUG: hardcoded token
-    const val TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjIyNjI2NDgzLCJqdGkiOiIyNzM2NDcxNmM2OTU0MDY4YTExNmVmNmVkZTA0NGQyOCIsInVzZXJfaWQiOiJicm9za2kifQ.51OOCxAa4cqeJcPTyl0348aq-Z_m3uM1Ftu0ITWesHA"
+    const val TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjIyNzEyODc3LCJqdGkiOiJjZTU5ZWRkNjBlODA0MGZjYmNmMTJhMDVkZGNjZmZjYyIsInVzZXJfaWQiOiJicm9za2kifQ.6Z0OsnEyAEIjNZIOMH0711jPlNU2wtE8gfQJ8HoyCdM"
 
 }
