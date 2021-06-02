@@ -1,18 +1,18 @@
 package com.example.shiristory.ui.timeline
 
+import android.R.attr.data
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
+import com.example.shiristory.service.common.MediaType
 import com.example.shiristory.service.common.ToolKits
 import com.example.shiristory.service.timeline.models.Comment
 import com.example.shiristory.service.timeline.models.Post
@@ -27,7 +27,7 @@ class PostAdapter(private val _dataSet: ArrayList<Post>, private val _model: Tim
 
     private val TAG = this.javaClass.name
 
-    fun addPost(post:Post){
+    fun addPost(post: Post) {
         _dataSet.add(0, post)
         this.notifyItemInserted(0)
     }
@@ -39,7 +39,7 @@ class PostAdapter(private val _dataSet: ArrayList<Post>, private val _model: Tim
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    open class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val postContent: TextView = view.findViewById(R.id.post_content)
         val postAuthor: TextView = view.findViewById(R.id.post_author)
         val postAuthorPic: CircleImageView = view.findViewById(R.id.post_author_pic)
@@ -61,13 +61,46 @@ class PostAdapter(private val _dataSet: ArrayList<Post>, private val _model: Tim
         }
     }
 
+    class PostImageViewHolder(view: View) : PostViewHolder(view) {
+        val postImage: ImageView = view.findViewById(R.id.post_image)
+    }
+
+    class PostVideoViewHolder(view: View) : PostViewHolder(view) {
+        val postVideo: VideoView = view.findViewById(R.id.post_video)
+    }
+
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): PostViewHolder {
         // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.post_item_plain_text, viewGroup, false)
+        when (viewType) {
+            MediaType.IMAGE.id -> {
+                return PostImageViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.post_image, viewGroup, false)
+                )
+            }
+            MediaType.VIDEO.id -> {
+                return PostVideoViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.post_video, viewGroup, false)
+                )
+            }
 
-        return PostViewHolder(view)
+            else -> {
+                return PostViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.post_plain_text, viewGroup, false)
+                )
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (_dataSet[position].mediaType) {
+            MediaType.IMAGE.value -> MediaType.IMAGE.id
+            MediaType.VIDEO.value -> MediaType.VIDEO.id
+            else -> MediaType.TEXT.id
+        }
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -78,6 +111,21 @@ class PostAdapter(private val _dataSet: ArrayList<Post>, private val _model: Tim
         viewHolder.postContent.text = post.content
         viewHolder.postAuthor.text = post.author.username
         viewHolder.postCreatedAt.text = post.createdAt
+
+        when (viewHolder.itemViewType){
+            MediaType.IMAGE.id -> {
+                Glide.with(viewHolder.itemView).load(post.mediaUrl)
+                    .into((viewHolder as PostImageViewHolder).postImage)
+            }
+
+            MediaType.VIDEO.id -> {
+                val mediaController = MediaController(viewHolder.itemView.context)
+                val postVideo = (viewHolder as PostVideoViewHolder).postVideo
+                mediaController.setAnchorView(postVideo)
+                postVideo.setMediaController(mediaController)
+                postVideo.setVideoPath(post.mediaUrl)
+            }
+        }
 
         // Comments
         viewHolder.postCommentCount.text = post.comments.size.toString()
