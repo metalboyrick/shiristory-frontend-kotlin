@@ -20,7 +20,7 @@ class FileUtil {
             val inputStream = context.contentResolver.openInputStream(uri)
             val fileName = getFileName(context, uri)
             val splitName = splitFileName(fileName)
-            var tempFile = File.createTempFile(splitName[0], splitName[1])
+            var tempFile = File.createTempFile(splitName[0], splitName[1], context.cacheDir)
             tempFile = rename(tempFile, fileName)
             tempFile.deleteOnExit()
             var out: FileOutputStream? = null
