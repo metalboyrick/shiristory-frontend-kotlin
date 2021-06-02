@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
-import com.example.shiristory.service.MediaUtil
+import com.example.shiristory.service.common.MediaUtil
 import com.example.shiristory.service.common.FileUtil
 import com.example.shiristory.service.common.FileUtil.Companion.trimCache
 import com.example.shiristory.service.common.MediaType
@@ -36,7 +36,8 @@ class AddPostActivity : AppCompatActivity() {
     private lateinit var _postAddImageView: ImageView
     private lateinit var _postAddVideoView: VideoView
 
-    private val _mediaUtil = MediaUtil(this)
+    private val _mediaUtil =
+        MediaUtil(this)
     private var _mediaType: MediaType? = null
     private var _mediaUri: Uri? = null
 
