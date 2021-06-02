@@ -2,7 +2,6 @@ package com.example.shiristory.service.common
 
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import android.provider.OpenableColumns
 import android.util.Log
 import java.io.*
