@@ -32,7 +32,7 @@
             android:id="@+id/nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World"
+            android:text="@string/hello_world"
             android:textColor="@color/white"
             android:textSize="32sp" />
 

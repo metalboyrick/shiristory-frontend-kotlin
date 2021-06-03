@@ -1,10 +1,12 @@
 package com.example.shiristory.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
@@ -23,6 +25,8 @@ class ProfileFragment : Fragment() {
     private var nickname: TextView? = null
     private var profilePic: CircleImageView? = null
     private var bio: TextView? = null
+    private var editProfileButton: Button? = null
+    private var _user : User? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +43,15 @@ class ProfileFragment : Fragment() {
         nickname = view.findViewById(R.id.nickname)
         profilePic = view.findViewById(R.id.profile_picture)
         bio = view.findViewById(R.id.bio)
+        editProfileButton = view.findViewById(R.id.edit_profile)
+
+        editProfileButton?.setOnClickListener {
+            val intent = Intent(context, EditProfileActivity::class.java)
+            intent.putExtra("nickname",_user?.nickname)
+            intent.putExtra("bio",_user?.bio)
+            intent.putExtra("profile_pic_url",_user?.profile_pic_url)
+            startActivity(intent)
+        }
 
         _model.getUserProfile().observe(viewLifecycleOwner, Observer {
             nickname?.setText(it.nickname)
@@ -56,6 +69,7 @@ class ProfileFragment : Fragment() {
             nickname?.setText(it.nickname)
             bio?.setText(it.bio)
             Glide.with(this).load(it.profile_pic_url).into(profilePic!!)
+            _user = it
         })
     }
 
