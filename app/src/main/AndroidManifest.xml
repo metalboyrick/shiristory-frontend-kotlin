@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.shiristory">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -16,9 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shiristory">
-
+        <activity android:name=".ui.story.StorySettingsActivity"></activity>
+        <activity android:name=".ui.story.StoryActivity" />
         <activity android:name=".ui.profile.EditProfileActivity"></activity>
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -28,6 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
         <activity
             android:name=".ui.timeline.AddPostActivity"

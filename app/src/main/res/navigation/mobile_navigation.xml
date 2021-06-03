@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_story"
-        android:name="com.example.shiristory.ui.story.StoryFragment"
+        android:name="com.example.shiristory.ui.story.GroupListFragment"
         android:label="@string/title_story"
-        tools:layout="@layout/fragment_story" />
+        tools:layout="@layout/fragment_group_list" />
 
     <fragment
         android:id="@+id/navigation_contact"

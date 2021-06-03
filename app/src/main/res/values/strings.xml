@@ -10,6 +10,10 @@
     <string name="update_profile">Update</string>
     <string name="post_comment_hint">Write a comment...</string>
 
+    <string name="play_audio">Play audio</string>
+    <string name="msg_hint">What happens next?</string>
+
+
     <string name="post_add">Add post</string>
     <string name="post_submit">Submit</string>
     <string name="post_add_title">Create post</string>
@@ -25,5 +29,6 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
+
 
 </resources>
