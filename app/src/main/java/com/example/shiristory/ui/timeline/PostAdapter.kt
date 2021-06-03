@@ -1,20 +1,18 @@
 package com.example.shiristory.ui.timeline
 
+import android.R.attr.data
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
+import android.widget.*
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
+import com.example.shiristory.service.common.MediaType
 import com.example.shiristory.service.common.ToolKits
 import com.example.shiristory.service.timeline.models.Comment
 import com.example.shiristory.service.timeline.models.Post
@@ -24,16 +22,24 @@ import com.rengwuxian.materialedittext.MaterialEditText
 import de.hdodenhof.circleimageview.CircleImageView
 
 
-class PostAdapter(private val _dataSet: List<Post>, private val _model: TimelineViewModel) :
+class PostAdapter(private val _dataSet: ArrayList<Post>, private val _model: TimelineViewModel) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     private val TAG = this.javaClass.name
+
+    fun addPost(post: Post) {
+        _dataSet.add(0, post)
+        this.notifyItemInserted(0)
+    }
+
+    // Return the size of your _dataSet (invoked by the layout manager)
+    override fun getItemCount() = _dataSet.size
 
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    open class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val postContent: TextView = view.findViewById(R.id.post_content)
         val postAuthor: TextView = view.findViewById(R.id.post_author)
         val postAuthorPic: CircleImageView = view.findViewById(R.id.post_author_pic)
@@ -55,16 +61,46 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         }
     }
 
+    class PostImageViewHolder(view: View) : PostViewHolder(view) {
+        val postImage: ImageView = view.findViewById(R.id.post_image)
+    }
+
+    class PostVideoViewHolder(view: View) : PostViewHolder(view) {
+        val postVideo: VideoView = view.findViewById(R.id.post_video)
+    }
+
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): PostViewHolder {
         // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.post_item_plain_text, viewGroup, false)
+        when (viewType) {
+            MediaType.IMAGE.id -> {
+                return PostImageViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.post_image, viewGroup, false)
+                )
+            }
+            MediaType.VIDEO.id -> {
+                return PostVideoViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.post_video, viewGroup, false)
+                )
+            }
 
-        val commentView = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.post_item_comment, viewGroup, false)
+            else -> {
+                return PostViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.post_plain_text, viewGroup, false)
+                )
+            }
+        }
+    }
 
-        return PostViewHolder(view)
+    override fun getItemViewType(position: Int): Int {
+        return when (_dataSet[position].mediaType) {
+            MediaType.IMAGE.value -> MediaType.IMAGE.id
+            MediaType.VIDEO.value -> MediaType.VIDEO.id
+            else -> MediaType.TEXT.id
+        }
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -75,27 +111,28 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         viewHolder.postContent.text = post.content
         viewHolder.postAuthor.text = post.author.username
         viewHolder.postCreatedAt.text = post.createdAt
-        viewHolder.postLikeCount.text = post.likes.size.toString()
+
+        when (viewHolder.itemViewType){
+            MediaType.IMAGE.id -> {
+                Glide.with(viewHolder.itemView).load(post.mediaUrl)
+                    .into((viewHolder as PostImageViewHolder).postImage)
+            }
+
+            MediaType.VIDEO.id -> {
+                val mediaController = MediaController(viewHolder.itemView.context)
+                val postVideo = (viewHolder as PostVideoViewHolder).postVideo
+                mediaController.setAnchorView(postVideo)
+                postVideo.setMediaController(mediaController)
+                postVideo.setVideoPath(post.mediaUrl)
+            }
+        }
+
+        // Comments
         viewHolder.postCommentCount.text = post.comments.size.toString()
-
         viewHolder.postCommentLayout.removeAllViews()
-
         for (comment in post.comments) {
             addCommentView(viewHolder, comment)
         }
-
-        viewHolder.postLikeButton.setOnLikeListener(
-            object : OnLikeListener {
-                override fun liked(likeButton: LikeButton) {
-                    Log.d(TAG, "like " + post.content)
-                }
-
-                override fun unLiked(likeButton: LikeButton) {
-                    Log.d(TAG, "unlike" + post.content)
-                }
-            }
-        )
-
         viewHolder.postCommentButton.setOnLikeListener(
             object : OnLikeListener {
                 override fun liked(likeButton: LikeButton) {
@@ -111,40 +148,32 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         )
 
         viewHolder.postCommentSubmitButton.setOnClickListener(View.OnClickListener() {
-
-            val input: MaterialEditText = viewHolder.postCommentInput
-            val commentCountView: TextView = viewHolder.postCommentCount
-            val text: String = input.text.toString()
-
-            viewHolder.postCommentInput.clearFocus()
-
-            if (text.isNotEmpty()) {
-
-                Log.d(TAG, "clicked: " + post.id + " " + text)
-
-                val context: Context = viewHolder.postCommentLayout.context
-
-                _model.addComment(post_id = post.id, comment = text)
-                    .observe(context as LifecycleOwner, Observer {
-                        if (it != null) {
-                            addCommentView(viewHolder, it)
-                            commentCountView.text =
-                                (commentCountView.text.toString().toInt() + 1).toString()
-                            input.text?.clear()
-                            ToolKits.hideSoftKeyboard(context, input)
-                        }
-                    })
-            }
-
+            submitComment(viewHolder, post)
         })
 
+        // Likes
+        viewHolder.postLikeCount.text = post.likes.size.toString()
+        // TODO: check if user has already liked
+        viewHolder.postLikeButton.setOnLikeListener(
+            object : OnLikeListener {
+                override fun liked(likeButton: LikeButton) {
+                    Log.d(TAG, "like " + post.content)
+                    _model.likePost(post.id)
+                    updateLikeCount(viewHolder, 1)
+                }
+
+                override fun unLiked(likeButton: LikeButton) {
+                    Log.d(TAG, "dislike" + post.content)
+                    _model.likePost(post.id, dislike = true)
+                    updateLikeCount(viewHolder, -1)
+                }
+            }
+        )
+
+        // Load profile pic
         Glide.with(viewHolder.itemView).load(post.author.profilePicUrl)
             .into(viewHolder.postAuthorPic)
-
     }
-
-    // Return the size of your _dataSet (invoked by the layout manager)
-    override fun getItemCount() = _dataSet.size
 
     private fun addCommentView(viewHolder: PostViewHolder, comment: Comment) {
         val commentView = LayoutInflater.from(viewHolder.postCommentLayout.context)
@@ -157,5 +186,36 @@ class PostAdapter(private val _dataSet: List<Post>, private val _model: Timeline
         commentView.findViewById<TextView>(R.id.post_comment_comment).text = comment.comment
 
         viewHolder.postCommentLayout.addView(commentView)
+    }
+
+    private fun submitComment(viewHolder: PostViewHolder, post: Post) {
+        val input: MaterialEditText = viewHolder.postCommentInput
+        val commentCountView: TextView = viewHolder.postCommentCount
+        val text: String = input.text.toString()
+
+        viewHolder.postCommentInput.clearFocus()
+
+        if (text.isNotEmpty()) {
+
+            Log.d(TAG, "clicked: " + post.id + " " + text)
+
+            val context: Context = viewHolder.postCommentLayout.context
+
+            _model.addComment(post_id = post.id, comment = text)
+                .observe(context as LifecycleOwner, Observer {
+                    if (it != null) {
+                        addCommentView(viewHolder, it)
+                        commentCountView.text =
+                            (commentCountView.text.toString().toInt() + 1).toString()
+                        input.text?.clear()
+                        ToolKits.hideSoftKeyboard(context, input)
+                    }
+                })
+        }
+    }
+
+    private fun updateLikeCount(viewHolder: PostViewHolder, increment: Int) {
+        val likeCountView: TextView = viewHolder.postLikeCount
+        likeCountView.text = (likeCountView.text.toString().toInt() + increment).toString()
     }
 }
