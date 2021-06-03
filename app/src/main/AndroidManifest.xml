@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +17,7 @@
         android:theme="@style/Theme.Shiristory">
         <activity android:name=".ui.story.StorySettingsActivity"></activity>
         <activity android:name=".ui.story.StoryActivity" />
+        <activity android:name=".ui.profile.EditProfileActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -25,6 +27,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".ui.timeline.AddPostActivity"
+            android:label="@string/post_add_title"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.shiristory.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>
