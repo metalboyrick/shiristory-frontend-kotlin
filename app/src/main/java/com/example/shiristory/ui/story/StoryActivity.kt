@@ -1,12 +1,19 @@
 package com.example.shiristory.ui.story
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shiristory.R
+import com.example.shiristory.service.common.RequestCodes
+import com.example.shiristory.ui.timeline.AddPostActivity
 
 class StoryActivity : AppCompatActivity() {
 
@@ -35,5 +42,24 @@ class StoryActivity : AppCompatActivity() {
             })
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.story_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.action_story_goto_settings -> {
+                val settingsIntent = Intent(context, StorySettingsActivity::class.java)
+                ContextCompat.startActivity(context, settingsIntent, null)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
