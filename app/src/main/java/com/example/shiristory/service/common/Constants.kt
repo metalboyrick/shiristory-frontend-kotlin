@@ -10,7 +10,7 @@ object Constants {
     const val STORY_API_PREFIX = "story"
     const val USER_API_PREFIX = "user"
 
-    const val TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjIyODgzMTE5LCJqdGkiOiIwOWVmM2ZhZjM3NDE0OWE0YTJhNjYyMDgwODg0YzQ5MCIsInVzZXJfaWQiOiJicm9za2kifQ.pW8PRNmObiDWhOnXbSiZMQF8AchKVsfVxuYS8S4FLsU"
+    const val TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjI0MDA3MTUwLCJqdGkiOiJjNjZmOTVlM2RjNDc0YjY4OGY4ODliMGJiYTMyZjFhYSIsInVzZXJfaWQiOiJicm9za2kifQ.vZ45i75mzv_h7ZWa4l8gKasVO8M0JtStg9BLEo8jCks"
 }
 
 
