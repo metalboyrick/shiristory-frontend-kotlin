@@ -54,7 +54,9 @@ class StoryActivity : AppCompatActivity() {
         // Handle item selection
         return when (item.itemId) {
             R.id.action_story_goto_settings -> {
-                val settingsIntent = Intent(context, StorySettingsActivity::class.java)
+                val settingsIntent = Intent(context, StorySettingsActivity::class.java).apply{
+                    putExtra("groupId", _currentGroupId)
+                }
                 ContextCompat.startActivity(context, settingsIntent, null)
                 true
             }

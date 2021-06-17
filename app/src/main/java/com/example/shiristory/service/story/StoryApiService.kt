@@ -2,6 +2,7 @@ package com.example.shiristory.service.story
 
 import com.example.shiristory.service.common.Constants
 import com.example.shiristory.service.common.Constants.TOKEN
+import com.example.shiristory.service.story.models.GroupInfoResponse
 import com.example.shiristory.service.story.models.StoryEntryResponse
 import com.example.shiristory.service.story.models.GroupListResponse
 import retrofit2.Call
@@ -28,4 +29,11 @@ interface StoryApiService {
             @Query("page") page: Int,
             @Query("size") size: Int?
     ): Call<StoryEntryResponse>
+
+    // get story group info
+    @GET("${Constants.STORY_API_PREFIX}/{group_id}/info")
+    @Headers("Authorization: $TOKEN")
+    fun getGroupInfo(
+        @Path("group_id") group_id: String
+    ): Call<GroupInfoResponse>
 }
