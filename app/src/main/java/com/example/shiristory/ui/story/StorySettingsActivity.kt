@@ -27,6 +27,7 @@ class StorySettingsActivity : AppCompatActivity() {
         // get the group id from the previous page
         _currentGroupId = intent.getStringExtra("groupId")
 
+        // fill in the information
         if(_currentGroupId != null){
             _model.getGroupInfo(_currentGroupId!!).observe(this, Observer {
                 if (it != null) {

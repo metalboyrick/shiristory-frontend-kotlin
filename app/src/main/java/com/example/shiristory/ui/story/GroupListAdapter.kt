@@ -56,6 +56,7 @@ class GroupListAdapter(private val _dataSet: List<GroupListEntry>, private val _
         viewHolder.storyEntry.setOnClickListener {
             val storyIntent = Intent(it.context, StoryActivity::class.java).apply{
                 putExtra("groupId", groupId)
+                putExtra("groupName", groupListEntry.name)
             }
             startActivity(it.context, storyIntent, null)
         }

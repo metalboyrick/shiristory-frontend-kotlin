@@ -34,6 +34,11 @@ class StoryActivity : AppCompatActivity() {
         _recyclerView = findViewById(R.id.story_recyclerview)
         _recyclerView.layoutManager = LinearLayoutManager(context)
 
+        // set the title of the actionbar
+        val actionBar = supportActionBar
+        actionBar?.title =  intent.getStringExtra("groupName")
+
+        // display the messages
         if(_currentGroupId != null){
             _model.getPostedStories(_page, _size, _currentGroupId!!).observe(this, Observer {
                 if (it != null) {
