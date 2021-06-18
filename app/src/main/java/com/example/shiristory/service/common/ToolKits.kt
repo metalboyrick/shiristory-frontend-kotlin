@@ -28,7 +28,7 @@ class ToolKits {
         }
 
         fun parseMultiPartFormData(data: String): RequestBody {
-            return RequestBody.create(okhttp3.MediaType.parse("multipart/form-data"), data)
+            return RequestBody.create(okhttp3.MediaType.parse("text/plain"), data)
         }
     }
 }
