@@ -37,4 +37,7 @@ class StorySettingsViewModel: ViewModel() {
 
         return _getGroupInfo
     }
+
+    // TODO: leave group (Wait for user state implementation)
+
 }

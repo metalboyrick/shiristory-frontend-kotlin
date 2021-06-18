@@ -2,14 +2,12 @@ package com.example.shiristory.service.story
 
 import com.example.shiristory.service.common.Constants
 import com.example.shiristory.service.common.Constants.TOKEN
+import com.example.shiristory.service.common.models.GenericResponse
 import com.example.shiristory.service.story.models.GroupInfoResponse
 import com.example.shiristory.service.story.models.StoryEntryResponse
 import com.example.shiristory.service.story.models.GroupListResponse
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface StoryApiService {
 
@@ -36,4 +34,11 @@ interface StoryApiService {
     fun getGroupInfo(
         @Path("group_id") group_id: String
     ): Call<GroupInfoResponse>
+
+    // delete member
+    @DELETE("${Constants.STORY_API_PREFIX}/{group_id}/admin/member")
+    @Headers("Authorization: $TOKEN")
+    fun deleteMember(
+        @Path("group_id") group_id: String
+    ): Call<GenericResponse>
 }

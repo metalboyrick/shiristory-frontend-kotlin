@@ -12,7 +12,8 @@ object Constants {
 
     // debug token
 
-    const val TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjI0MDA3MTUwLCJqdGkiOiJjNjZmOTVlM2RjNDc0YjY4OGY4ODliMGJiYTMyZjFhYSIsInVzZXJfaWQiOiJicm9za2kifQ.vZ45i75mzv_h7ZWa4l8gKasVO8M0JtStg9BLEo8jCks"
+    const val TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjI0MDg1NzgzLCJqdGkiOiI3YTRlNTdiNTc5NzM0Njk0ODkwZTYzNjQzYjRlYmI5OSIsInVzZXJfaWQiOiJ2YWFuaXNjb29sIn0.I1YeqxbtZWhME7OQ_nCIgGGNcXzrlhXc6w2Kuey1uFU"
+
 
     // story status
     const val ONGOING = 0
