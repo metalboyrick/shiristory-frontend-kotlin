@@ -13,7 +13,7 @@ import com.example.shiristory.service.story.models.GroupMembersEntry
 import com.example.shiristory.ui.base.GlideImageLoader
 import de.hdodenhof.circleimageview.CircleImageView
 
-class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, private val _model: StorySettingsViewModel) :
+class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, private val _model: StorySettingsViewModel, private val _admins: ArrayList<GroupMembersEntry>) :
     RecyclerView.Adapter<MemberListAdapter.MemberListViewHolder>() {
 
     private val TAG = this.javaClass.name
@@ -26,6 +26,7 @@ class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, priv
 
         val memberName: TextView = view.findViewById(R.id.friend_nickname)
         val memberPicture: CircleImageView = view.findViewById(R.id.friend_profile_picture)
+        val memberKickButton: TextView = view.findViewById(R.id.remove_friend)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -52,6 +53,9 @@ class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, priv
         Glide.with(viewHolder.itemView)
             .load(member.profilePicUrl)
             .into(viewHolder.memberPicture)
+
+        // TODO: remove the cross bars if current user is not admin (wait until user state is implemented)
+//        if (!(member in _admins)) viewHolder.memberKickButton.visibility = View.INVISIBLE
     }
 
     // Return the size of your _dataSet (invoked by the layout manager)

@@ -42,7 +42,7 @@ class StorySettingsActivity : AppCompatActivity() {
                     _groupNameView.setText(it.name)
                     if(it.status == FINISHED)
                         _groupStatusView.isChecked = true
-                    _recyclerView.adapter = MemberListAdapter(it.members, _model)
+                    _recyclerView.adapter = MemberListAdapter(it.members, _model, it.admins)
                 }
             })
         }
