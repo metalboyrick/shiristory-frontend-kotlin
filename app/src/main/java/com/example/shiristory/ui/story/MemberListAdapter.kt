@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
 import com.example.shiristory.service.story.models.GroupMembersEntry
+import com.example.shiristory.service.story.models.StoryEntry
 import com.example.shiristory.ui.base.GlideImageLoader
 import de.hdodenhof.circleimageview.CircleImageView
 

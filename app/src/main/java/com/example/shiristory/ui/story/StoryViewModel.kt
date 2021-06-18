@@ -17,7 +17,7 @@ class StoryViewModel : ViewModel() {
     private var _getStoryEntries: MutableLiveData<List<StoryEntry>> = MutableLiveData<List<StoryEntry>>()
     private val _service: StoryApiService = RetrofitBuilder.storyApiService
 
-    fun getPostedStories(page: Int = 1, size: Int = 3,groupId: String): LiveData<List<StoryEntry>> {
+    fun getPostedStories(page: Int = 1, size: Int = 10,groupId: String): LiveData<List<StoryEntry>> {
 
         val call: Call<StoryEntryResponse> = _service.getPostedStories(groupId, page, size)
         call.enqueue(object : Callback<StoryEntryResponse> {
@@ -36,5 +36,7 @@ class StoryViewModel : ViewModel() {
 
         return _getStoryEntries
     }
+
+    //TODO: handle paginations
 
 }

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.shiristory.R
 import com.example.shiristory.service.story.models.StoryEntry
 
-class StoryAdapter(private val _dataSet: List<StoryEntry>, private val _model: StoryViewModel) :
+class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _model: StoryViewModel) :
         RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
     private val TAG = this.javaClass.name
@@ -50,4 +50,8 @@ class StoryAdapter(private val _dataSet: List<StoryEntry>, private val _model: S
     // Return the size of your _dataSet (invoked by the layout manager)
     override fun getItemCount() = _dataSet.size
 
+    fun addItem(newImg : StoryEntry){
+        _dataSet.add(newImg)
+        notifyDataSetChanged()
+    }
 }
