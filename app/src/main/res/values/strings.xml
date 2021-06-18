@@ -29,6 +29,8 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
+    <string name="story_members">Members</string>
+    <string name="story_goto_settings">story_goto_settings</string>
 
 
 </resources>

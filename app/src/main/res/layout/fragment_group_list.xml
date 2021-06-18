@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/alice_blue_50">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/group_list_recyclerview"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/create_new_grp_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        app:backgroundTint="#83C5BE"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:focusable="true" />
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/group_list_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 </FrameLayout>

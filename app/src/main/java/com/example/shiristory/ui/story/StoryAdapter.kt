@@ -45,15 +45,6 @@ class StoryAdapter(private val _dataSet: List<StoryEntry>, private val _model: S
         viewHolder.storyAuthor.text = "By: ${StoryEntry.author}"
 //        viewHolder.storyLastEdited.text = StoryEntry.lastEdited
         val storyId: String = StoryEntry.storyId
-
-//        // navigate to the appropriate story page
-//        viewHolder.storyEntry.setOnClickListener {
-//            val storyIntent = Intent(it.context, StoryActivity::class.java).apply{
-//                putExtra("groupId", groupId)
-//            }
-//            ContextCompat.startActivity(it.context, storyIntent, null)
-//        }
-
     }
 
     // Return the size of your _dataSet (invoked by the layout manager)
