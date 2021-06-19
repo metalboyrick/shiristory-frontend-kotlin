@@ -1,12 +1,13 @@
 package com.example.shiristory.service.timeline.models
 
+import com.example.shiristory.service.authentication.models.User
 import com.google.gson.annotations.SerializedName
 
 data class Post(
     @SerializedName("_id")
     val id:String,
     @SerializedName("author")
-    val author:SimpleUser,
+    val author: User,
     @SerializedName("content")
     val content:String,
     @SerializedName("inv_link")
@@ -20,7 +21,7 @@ data class Post(
     @SerializedName("updated_at")
     val updatedAt:String,
     @SerializedName("likes")
-    var likes:ArrayList<SimpleUser> = ArrayList<SimpleUser>(),
+    var likes:ArrayList<User> = ArrayList<User>(),
     @SerializedName("comments")
     var comments:ArrayList<Comment> = ArrayList<Comment>()
 )

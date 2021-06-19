@@ -1,9 +1,9 @@
-package com.example.shiristory.service.timeline.models
+package com.example.shiristory.service.authentication.models
 
 import com.example.shiristory.service.authentication.models.User
 import com.google.gson.annotations.SerializedName
 
-data class Comment(
+data class Token(
     @SerializedName("author")
     val author: User,
     @SerializedName("comment")
