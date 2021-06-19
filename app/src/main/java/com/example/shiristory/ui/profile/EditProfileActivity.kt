@@ -35,7 +35,7 @@ class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback {
 
         ChiliPhotoPicker.init(
             loader = GlideImageLoader(),
-            authority = "lv.chi.sample.fileprovider"
+            authority = "com.example.shiristory.fileprovider"
         )
 
         new_nickname = findViewById(R.id.new_nickname)
@@ -77,7 +77,8 @@ class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback {
     fun submitUserProfileUpdate(view: View) {
         _model.updateUserProfile(
             new_nickname?.getText().toString(),
-            new_bio?.getText().toString()
+            new_bio?.getText().toString(),
+            new_profile_pic_uri
         ).observe(this, Observer {
             if (it) {
                 Log.d("update status", "OK")

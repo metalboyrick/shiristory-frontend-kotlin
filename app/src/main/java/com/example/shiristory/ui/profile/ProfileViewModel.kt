@@ -57,21 +57,18 @@ class ProfileViewModel : ViewModel() {
     fun updateUserProfile(
         new_nickname: String,
         new_bio: String,
-        new_profile_pic_uri: Uri = Uri.EMPTY
+        new_profile_pic_uri: Uri? = Uri.EMPTY
     ): LiveData<Boolean> {
-        Log.d("new_nickname", new_nickname)
-        Log.d("new_bio", new_bio)
-        Log.d("new_profile_pic_uri", new_profile_pic_uri.getPath()!!)
 
         val call: Call<GenericResponse>
-        if(new_profile_pic_uri == Uri.EMPTY){
+        if(new_profile_pic_uri == Uri.EMPTY || new_profile_pic_uri == null ){
             call = _service.updateUserProfile(
                 new_nickname = RequestBody.create(MediaType.parse("multipart/form-data"), new_nickname),
                 new_bio = RequestBody.create(MediaType.parse("multipart/form-data"), new_bio)
             )
         }
         else{
-            val profile_image: MultipartBody.Part = parseMultiPartFile(new_profile_pic_uri, "image/*")
+            val profile_image: MultipartBody.Part = parseMultiPartFile(new_profile_pic_uri!!, "image/*")
 
             call = _service.updateUserProfile(
                 new_nickname = RequestBody.create(MediaType.parse("multipart/form-data"), new_nickname),

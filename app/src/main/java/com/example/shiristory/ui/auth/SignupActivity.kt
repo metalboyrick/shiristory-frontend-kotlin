@@ -1,17 +1,14 @@
 package com.example.shiristory.ui.auth
 
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.preference.PreferenceManager
 import com.dd.processbutton.iml.ActionProcessButton
-import com.example.shiristory.MainActivity
 import com.example.shiristory.R
 import com.example.shiristory.service.authentication.AuthenticationApiService
 import com.example.shiristory.service.authentication.models.Token
@@ -23,6 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import kotlin.concurrent.schedule
+
 
 class SignupActivity : AppCompatActivity() {
 
@@ -66,7 +64,7 @@ class SignupActivity : AppCompatActivity() {
                     _signUpResponse.value = response.body()
                 } else {
                     sign_up_button?.progress = -1
-                    Timer().schedule(3000){
+                    Timer().schedule(3000) {
                         sign_up_button?.progress = 0
                     }
                 }
@@ -91,24 +89,24 @@ class SignupActivity : AppCompatActivity() {
         val credentials = mapOf("username" to username, "password" to password, "email" to email)
 
         _signUp(credentials).observe(this, Observer {
+            // if sign up successful
             if (it != null) {
-                val sharedPref: SharedPreferences =
-                    PreferenceManager.getDefaultSharedPreferences(this)
-                val editor = sharedPref.edit()
-
-                editor.putString(R.string.jwt_access_key.toString(), it.access)
-                editor.putString(R.string.jwt_refresh_key.toString(), it.refresh)
-                editor.apply()
-
+                val returnIntent = Intent()
+                returnIntent.putExtra("username", username)
+                returnIntent.putExtra("password", password)
+                setResult(RESULT_OK, returnIntent)
                 sign_up_button!!.progress = 100
-
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
                 finish()
             }
         })
 
         sign_up_button!!.progress = 1
 
+    }
+
+    fun cancelSignUp(view: View){
+        val returnIntent = Intent()
+        setResult(RESULT_CANCELED, returnIntent)
+        finish()
     }
 }

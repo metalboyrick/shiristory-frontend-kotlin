@@ -11,9 +11,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.dd.processbutton.iml.ActionProcessButton
+import com.example.shiristory.MainActivity
 import com.example.shiristory.R
 import com.example.shiristory.service.authentication.AuthenticationApiService
 import com.example.shiristory.service.authentication.models.Token
+import com.example.shiristory.service.common.RequestCodes.REQUEST_SIGNUP_STATUS
 import com.example.shiristory.service.common.RetrofitBuilder
 import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
@@ -45,6 +47,32 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    // receive intent from sign up page
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        Log.d("signup","RECEIVED INTENT FROM SIGN UP ACTIVITY")
+
+        if (requestCode == REQUEST_SIGNUP_STATUS) {
+            if (resultCode == RESULT_OK) {
+
+                // fill in credentials
+                val sign_up_username = data?.getStringExtra("username")
+                val sign_up_password = data?.getStringExtra("password")
+
+                Log.d("from signup",sign_up_username!!)
+
+                login_username?.setText(sign_up_username)
+                login_password?.setText(sign_up_password)
+
+                // login
+                login_button?.performClick()
+            }
+        }
+
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     private fun _login(credentials: Map<String, String>): LiveData<Token> {
 
         _loginResponse.value = null
@@ -63,7 +91,7 @@ class LoginActivity : AppCompatActivity() {
                     _loginResponse.value = response.body()
                 } else {
                     login_button?.progress = -1
-                    Timer().schedule(3000){
+                    Timer().schedule(3000) {
                         login_button?.progress = 0
                     }
                 }
@@ -108,9 +136,11 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    fun goSignUp(view:View){
+    fun goSignUp(view: View){
+
         val intent = Intent(this, SignupActivity::class.java)
-        startActivity(intent)
-        finish()
+
+        startActivityForResult(intent, REQUEST_SIGNUP_STATUS);
+
     }
 }

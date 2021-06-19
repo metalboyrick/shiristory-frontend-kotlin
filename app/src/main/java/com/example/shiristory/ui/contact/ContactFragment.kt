@@ -27,6 +27,7 @@ class ContactFragment : Fragment() {
 
     private val _model: ContactViewModel by viewModels()
     private lateinit var _recyclerView: RecyclerView
+    private var contactsTitleTextView: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +45,8 @@ class ContactFragment : Fragment() {
         _recyclerView = view.findViewById(R.id.contact_recyclerview)
 
         _recyclerView.layoutManager = LinearLayoutManager(context)
+
+        contactsTitleTextView = view.findViewById(R.id.contacts_result)
 
         getFriends()
     }
@@ -119,7 +122,7 @@ class ContactFragment : Fragment() {
                         if(it != null) {
                             // reinitialize adapter with new list of friends
                             _recyclerView.adapter = FriendAdapter(it, _model)
-
+                            contactsTitleTextView?.setText(R.string.contacts_search)
                             // close dialog
                             dialog.dismiss()
                         }
@@ -140,6 +143,7 @@ class ContactFragment : Fragment() {
                             // close dialog if successful
                             if (statusCode == 200) {
                                 getFriends()
+                                contactsTitleTextView?.setText(R.string.contacts_all)
                                 dialog.dismiss()
                             }
 
