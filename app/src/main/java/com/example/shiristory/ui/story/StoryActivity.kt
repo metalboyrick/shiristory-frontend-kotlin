@@ -252,6 +252,22 @@ class StoryActivity : AppCompatActivity() {
                     _model.uploadFile(_mediaType!!,_mediaUri!!).observe(this, Observer {
                         if (it != null) {
                             Log.d(TAG, it.fileUrl)
+
+                            // send through socket
+                            // send message
+                            var newMsg: OutMessage = OutMessage(
+                                "chat_message",
+                                _currentGroupId!!,
+                                "vaaniscool",                       // hardcoded for now
+                                _mediaType!!.id,
+                                it.fileUrl,
+                                _mediaType!!.id,
+                                0
+                            )
+
+                            val jsonStr: String = gson.toJson(newMsg)
+
+                            _ws.send(jsonStr)
                         }
                     })
 
