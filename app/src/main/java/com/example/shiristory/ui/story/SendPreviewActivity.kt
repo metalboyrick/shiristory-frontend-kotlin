@@ -1,7 +1,10 @@
 package com.example.shiristory.ui.story
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -10,6 +13,7 @@ import android.widget.VideoView
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
 import com.example.shiristory.service.common.MediaType
+import com.google.gson.Gson
 
 class SendPreviewActivity : AppCompatActivity() {
 
@@ -33,6 +37,13 @@ class SendPreviewActivity : AppCompatActivity() {
             finish()
         }
 
+        sendBtn.setOnClickListener {
+
+            val sendMediaIntent = Intent()
+            setResult(Activity.RESULT_OK, sendMediaIntent)
+            finish()
+        }
+
         if (type == MediaType.IMAGE.id){
 
             imagePreview.visibility = View.VISIBLE
@@ -50,6 +61,7 @@ class SendPreviewActivity : AppCompatActivity() {
             postVideo.setMediaController(mediaController)
             postVideo.setVideoPath(URI)
         }
+
     }
 
 

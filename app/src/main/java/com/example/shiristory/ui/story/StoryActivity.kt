@@ -248,8 +248,13 @@ class StoryActivity : AppCompatActivity() {
 
             RequestCodes.REQUEST_PREVIEW_IMAGE -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
+                    Log.d(TAG, "uploading images")
+                    _model.uploadFile(_mediaType!!,_mediaUri!!).observe(this, Observer {
+                        if (it != null) {
+                            Log.d(TAG, it.fileUrl)
+                        }
+                    })
 
-                    Log.d(TAG, "yabbajabba")
                 }
             }
 
