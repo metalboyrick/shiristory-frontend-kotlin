@@ -31,6 +31,7 @@
     <string name="sign_up_username_hint">New username</string>
     <string name="sign_up_password_hint">New password</string>
     <string name="sign_up_email_hint">New email</string>
+    <string name="sign_up_cancel">Cancel</string>
 
     <!--
     This string is used for square devices and overridden by hello_world in

@@ -28,12 +28,15 @@ class AuthInterceptor : Interceptor {
 
         val accessToken: String? = sharedPref.getString(R.string.jwt_access_key.toString(), null)
 
+
+
         // Creating the origin request object
         var request: Request = chain.request()
         Log.d(TAG, "Intercept request: " + request.url())
 
         // Add auth header if access token is available
         if (accessToken != null) {
+            Log.d("Access token in interceptor",accessToken)
             Log.d(TAG, "Add accessToken to request: " + request.url())
             request = addTokenToRequest(request, accessToken)
         }
