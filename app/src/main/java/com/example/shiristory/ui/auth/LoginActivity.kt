@@ -1,4 +1,4 @@
-package com.example.shiristory.ui.profile
+package com.example.shiristory.ui.auth
 
 import android.content.Context
 import android.content.SharedPreferences

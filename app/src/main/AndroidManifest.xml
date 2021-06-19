@@ -21,7 +21,7 @@
         <activity android:name=".ui.story.StoryActivity" />
         <activity android:name=".ui.story.CreateGroupActivity" />
 
-        <activity android:name=".ui.profile.LoginActivity">
+        <activity android:name=".ui.auth.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
