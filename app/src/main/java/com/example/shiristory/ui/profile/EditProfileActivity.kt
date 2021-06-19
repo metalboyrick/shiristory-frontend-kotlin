@@ -77,7 +77,8 @@ class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback {
     fun submitUserProfileUpdate(view: View) {
         _model.updateUserProfile(
             new_nickname?.getText().toString(),
-            new_bio?.getText().toString()
+            new_bio?.getText().toString(),
+            new_profile_pic_uri
         ).observe(this, Observer {
             if (it) {
                 Log.d("update status", "OK")
