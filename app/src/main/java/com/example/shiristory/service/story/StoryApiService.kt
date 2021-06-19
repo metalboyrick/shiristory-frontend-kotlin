@@ -4,10 +4,7 @@ import com.example.shiristory.service.common.Constants
 import com.example.shiristory.service.common.Constants.STORY_API_PREFIX
 import com.example.shiristory.service.common.Constants.TOKEN
 import com.example.shiristory.service.common.models.GenericResponse
-import com.example.shiristory.service.story.models.FileUploadResponse
-import com.example.shiristory.service.story.models.GroupInfoResponse
-import com.example.shiristory.service.story.models.StoryEntryResponse
-import com.example.shiristory.service.story.models.GroupListResponse
+import com.example.shiristory.service.story.models.*
 import com.example.shiristory.service.timeline.models.Comment
 import com.example.shiristory.service.timeline.models.Post
 import okhttp3.MultipartBody
@@ -56,5 +53,5 @@ interface StoryApiService {
     @POST("${STORY_API_PREFIX}/create")
     fun createStoryGroup(
         @Body  json_body: String
-    ): Call<Response>
+    ): Call<GroupCreateResponse>
 }
