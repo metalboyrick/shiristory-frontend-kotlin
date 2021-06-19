@@ -1,11 +1,14 @@
 package com.example.shiristory.ui.story
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.viewModels
@@ -14,14 +17,19 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.shiristory.R
 import com.example.shiristory.service.common.Constants.BASE_WS_URL
+import com.example.shiristory.service.common.FileUtil
 import com.example.shiristory.service.common.MediaType
+import com.example.shiristory.service.common.MediaUtil
+import com.example.shiristory.service.common.RequestCodes
 import com.example.shiristory.service.story.models.OutMessage
 import com.example.shiristory.service.story.models.StoryEntry
 import com.google.gson.Gson
 import okhttp3.*
 import okio.ByteString
+import java.io.File
 
 class StoryActivity : AppCompatActivity() {
 
@@ -29,6 +37,7 @@ class StoryActivity : AppCompatActivity() {
 
     private val _context = this@StoryActivity
     private val _client: OkHttpClient = OkHttpClient()
+    private lateinit var _ws : WebSocket
 
     private var _currentGroupId: String? = ""
     private val _model: StoryViewModel by viewModels()
@@ -37,6 +46,15 @@ class StoryActivity : AppCompatActivity() {
     private lateinit var _recyclerView: RecyclerView
     private lateinit var _textBoxView: EditText
     private lateinit var _sendMessageBtn: ImageButton
+    private lateinit var _selectMediaBtn: ImageButton
+    private lateinit var _inputVoicemailBtn: ImageButton
+    private lateinit var _inputCameraBtn: ImageButton
+
+    private val _mediaUtil =
+        MediaUtil(this)
+    private var _mediaType: MediaType? = null
+    private var _mediaUri: Uri? = null
+
 
     private val _page: Int = 1
     private val _size: Int = 20
@@ -44,7 +62,6 @@ class StoryActivity : AppCompatActivity() {
 
     val gson: Gson = Gson()
 
-    // TODO: websocket child class (modularise this)
     inner class StoryWebSocketListener : WebSocketListener() {
 
         private val NORMAL_CLOSURE_STATUS = 1000
@@ -98,6 +115,11 @@ class StoryActivity : AppCompatActivity() {
         _recyclerView.layoutManager = LinearLayoutManager(_context)
         _sendMessageBtn = findViewById(R.id.send_btn)
         _textBoxView = findViewById(R.id.input_msg)
+        _selectMediaBtn = findViewById(R.id.input_attachment)
+        _inputCameraBtn = findViewById(R.id.input_camera)
+        _inputVoicemailBtn = findViewById(R.id.voicemail_btn)
+
+
 
 
         // set the title of the actionbar
@@ -115,12 +137,12 @@ class StoryActivity : AppCompatActivity() {
             })
         }
 
-        // TODO: websocket connection handling
+        // websocket connection handling
         // start the ws
         val request: Request =
             Request.Builder().url(BASE_WS_URL + "ws/$_currentGroupId/stories").build()
         val listener = StoryWebSocketListener()
-        val ws = _client.newWebSocket(request, listener)
+        _ws = _client.newWebSocket(request, listener)
 
 //        _client.dispatcher().executorService().shutdown()
 
@@ -139,10 +161,15 @@ class StoryActivity : AppCompatActivity() {
 
             val jsonStr: String = gson.toJson(newMsg)
 
-            ws.send(jsonStr)
+            _ws.send(jsonStr)
 
             // empty the text box
             _textBoxView.text.clear()
+        }
+
+        // click listener for select attachment
+        _selectMediaBtn.setOnClickListener {
+            _mediaUtil.selectMedia()
         }
     }
 
@@ -165,6 +192,71 @@ class StoryActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        when (requestCode) {
+
+            RequestCodes.REQUEST_MEDIA_PICKER_SELECT, RequestCodes.REQUEST_MEDIA_VIDEO_RECORD -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+
+                    _mediaUri = data.data
+                    Log.d(TAG, "raw media uri:" + _mediaUri?.path!!)
+
+                    _mediaUri?.also {
+                        if (it.toString().contains("image")) {
+                            _mediaType = MediaType.IMAGE
+
+                            // TODO:  do ui stuff for image
+                            // make it pop up from a modal window
+                            val previewIntent = Intent(_context, SendPreviewActivity::class.java).apply{
+                                putExtra("URI", _mediaUri.toString())
+                                putExtra("type", MediaType.IMAGE.id)
+                            }
+                            startActivityForResult(previewIntent, RequestCodes.REQUEST_PREVIEW_IMAGE)
+
+                        } else if (it.toString().contains("video")) {
+                            _mediaType = MediaType.VIDEO
+
+                            // TODO: do ui stuff for video
+                            val previewIntent = Intent(_context, SendPreviewActivity::class.java).apply{
+                                putExtra("URI", _mediaUri.toString())
+                                putExtra("type", MediaType.VIDEO.id)
+                            }
+                            startActivityForResult(previewIntent, RequestCodes.REQUEST_PREVIEW_VIDEO)
+                        }
+
+                        val file: File = FileUtil.from(this, it)
+
+                        _mediaUri = Uri.parse(file.path)
+                        Log.d(TAG, "parsed media uri:" + _mediaUri?.path!!)
+                    }
+                }
+            }
+
+            RequestCodes.REQUEST_MEDIA_CAMERA_CAPTURE -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    _mediaUri = _mediaUtil.getPhotoUri()
+                    _mediaType = MediaType.IMAGE
+
+                    // TODO: do ui stuff for captured image
+
+                    Log.d(TAG, "raw camera capture uri:" + _mediaUri?.path!!)
+                }
+            }
+
+            RequestCodes.REQUEST_PREVIEW_IMAGE -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+
+                    Log.d(TAG, "yabbajabba")
+                }
+            }
+
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

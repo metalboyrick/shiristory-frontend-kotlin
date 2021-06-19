@@ -15,10 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shiristory">
-        <activity android:name=".ui.story.StorySettingsActivity"></activity>
+        <activity android:name=".ui.story.SendPreviewActivity"></activity>
+        <activity android:name=".ui.story.StorySettingsActivity" />
         <activity android:name=".ui.story.StoryActivity" />
         <activity android:name=".ui.story.CreateGroupActivity" />
-        <activity android:name=".ui.profile.EditProfileActivity"></activity>
+        <activity android:name=".ui.profile.EditProfileActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -28,13 +29,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".ui.timeline.AddPostActivity"
             android:label="@string/post_add_title"
             android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

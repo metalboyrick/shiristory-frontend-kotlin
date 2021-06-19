@@ -60,12 +60,14 @@ class StoryAdapter(
         viewHolder.storyVideo.visibility = View.GONE
 
         when (storyEntry.type) {
+
             // handle text
             MediaType.TEXT.id -> {
                 viewHolder.storyContent.visibility = View.VISIBLE
                 viewHolder.storyContent.text = storyEntry.content
 
             }
+
             // handle images
             MediaType.IMAGE.id -> {
                 viewHolder.storyImage.visibility = View.VISIBLE
@@ -75,6 +77,7 @@ class StoryAdapter(
                     .load(storyEntry.content)
                     .into(viewHolder.storyImage)
             }
+
             // handle audio
             MediaType.AUDIO.id -> {
 
@@ -102,6 +105,7 @@ class StoryAdapter(
                 viewHolder.playAudioBtn.visibility = View.VISIBLE
 
             }
+
             // handle video
             MediaType.VIDEO.id -> {
                 viewHolder.storyVideo.visibility = View.VISIBLE

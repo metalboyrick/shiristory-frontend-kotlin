@@ -37,12 +37,17 @@
             android:visibility="gone"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-        <VideoView
-            android:id="@+id/video_content"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:layout_marginBottom="5dp"
-            android:visibility="gone" />
+            android:layout_height="wrap_content">
+
+            <VideoView
+                android:id="@+id/video_content"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <Button
             android:id="@+id/audio_content"
