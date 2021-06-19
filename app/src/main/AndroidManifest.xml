@@ -18,25 +18,41 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shiristory">
 
-        <activity android:name=".ui.story.SendPreviewActivity"
-            android:parentActivityName=".ui.story.StoryActivity"/>
-
-        <activity android:name=".ui.story.StorySettingsActivity"
-            android:parentActivityName=".ui.story.StoryActivity"/>
-
-        <activity android:name=".ui.story.StoryActivity"
-            android:parentActivityName=".MainActivity"/>
+        <!--   Story    -->
+        <activity
+            android:name=".ui.story.StoryActivity"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.story.CreateGroupActivity"
             android:parentActivityName=".MainActivity" />
 
+        <activity
+            android:name=".ui.story.SendPreviewActivity"
+            android:parentActivityName=".ui.story.StoryActivity" />
+
+        <activity
+            android:name=".ui.story.StorySettingsActivity"
+            android:parentActivityName=".ui.story.StoryActivity" />
+
+        <!--  SignUp & Login      -->
         <activity android:name=".ui.auth.SignupActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
 
-        <activity android:name=".ui.profile.EditProfileActivity"
-            android:parentActivityName=".MainActivity"/>
+        <!--   Profile    -->
+        <activity
+            android:name=".ui.profile.EditProfileActivity"
+            android:parentActivityName=".MainActivity" />
 
+        <!--   Timeline    -->
+        <activity
+            android:name=".ui.timeline.AddPostActivity"
+            android:label="@string/post_add_title"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--   Main    -->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -47,12 +63,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.timeline.AddPostActivity"
-            android:label="@string/post_add_title"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize" />
-
+        <!--   Others    -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.shiristory.fileprovider"
@@ -62,6 +73,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 
 </manifest>

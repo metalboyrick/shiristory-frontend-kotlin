@@ -116,7 +116,7 @@ class StoryActivity : AppCompatActivity() {
         var newMsg: OutMessage = OutMessage(
             "chat_message",
             _currentGroupId!!,
-            username,            
+            username,
             mediaType.id,
             content,
             mediaType.id,

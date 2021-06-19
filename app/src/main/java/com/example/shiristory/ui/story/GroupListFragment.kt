@@ -50,6 +50,7 @@ class GroupListFragment : Fragment() {
                 val editor = sharedPref.edit()
 
                 editor.putString("username", it.username)
+                editor.putString("userId", it.id)
                 editor.apply()
             }
         })

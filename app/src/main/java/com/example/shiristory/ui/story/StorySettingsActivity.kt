@@ -1,11 +1,13 @@
 package com.example.shiristory.ui.story
 
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Switch
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shiristory.R
@@ -18,8 +20,11 @@ class StorySettingsActivity : AppCompatActivity() {
     private val _model: StorySettingsViewModel by viewModels()
     private lateinit var _groupNameView: EditText
     private lateinit var _groupStatusView: Switch
+    private var _currentUsername: String? = ""
+    private var _currentUserId: String? = ""
     private val _context = this@StorySettingsActivity
-    private lateinit var _recyclerView: RecyclerView
+    private lateinit var _memberRecyclerView: RecyclerView
+    private lateinit var _adminRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +32,20 @@ class StorySettingsActivity : AppCompatActivity() {
 
         _groupNameView = findViewById(R.id.edit_group_name)
         _groupStatusView = findViewById(R.id.group_status_switch)
-        _recyclerView = findViewById(R.id.group_members_recyclerview)
+        _memberRecyclerView = findViewById(R.id.group_members_recyclerview)
+        _adminRecyclerView = findViewById(R.id.group_admins_recyclerview)
 
         // get the group id from the previous page
         _currentGroupId = intent.getStringExtra("groupId")
 
+        val sharedPref: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this)
+
+        _currentUserId = sharedPref.getString("userId", " ")
+
         // inject linear layout manager
-        _recyclerView.layoutManager = LinearLayoutManager(_context)
+        _memberRecyclerView.layoutManager = LinearLayoutManager(_context)
+        _adminRecyclerView.layoutManager = LinearLayoutManager(_context)
 
         // fill in the information
         if(_currentGroupId != null){
@@ -42,12 +54,13 @@ class StorySettingsActivity : AppCompatActivity() {
                     _groupNameView.setText(it.name)
                     if(it.status == FINISHED)
                         _groupStatusView.isChecked = true
-                    _recyclerView.adapter = MemberListAdapter(it.members, _model, it.admins)
+                    _memberRecyclerView.adapter = MemberListAdapter(it.members, _model, it.admins)
+                    _adminRecyclerView.adapter = AdminListAdapter(it.admins, _model)
                 }
             })
         }
 
-
+        // remove cross if user is admin
 
 
 

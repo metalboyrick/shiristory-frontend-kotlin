@@ -46,7 +46,9 @@
                 android:id="@+id/video_content"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="5dp"
+                android:foregroundGravity="center_horizontal"
                 android:visibility="gone" />
         </FrameLayout>
 

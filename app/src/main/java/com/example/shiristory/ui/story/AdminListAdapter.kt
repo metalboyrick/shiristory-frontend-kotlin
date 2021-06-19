@@ -16,8 +16,8 @@ import com.example.shiristory.service.story.models.StoryEntry
 import com.example.shiristory.ui.base.GlideImageLoader
 import de.hdodenhof.circleimageview.CircleImageView
 
-class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, private val _model: StorySettingsViewModel, private val _admins: ArrayList<GroupMembersEntry>) :
-    RecyclerView.Adapter<MemberListAdapter.MemberListViewHolder>() {
+class AdminListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, private val _model: StorySettingsViewModel) :
+    RecyclerView.Adapter<AdminListAdapter.AdminListViewHolder>() {
 
     private val TAG = this.javaClass.name
     private var _currentUserId: String? = ""
@@ -26,7 +26,7 @@ class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, priv
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class MemberListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class AdminListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val memberName: TextView = view.findViewById(R.id.friend_nickname)
         val memberPicture: CircleImageView = view.findViewById(R.id.friend_profile_picture)
@@ -38,18 +38,18 @@ class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, priv
     }
 
     // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MemberListViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): AdminListViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.friend_item, viewGroup, false)
 
 
 
-        return MemberListViewHolder(view)
+        return AdminListViewHolder(view)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: MemberListViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: AdminListViewHolder, position: Int) {
         val member: GroupMembersEntry = _dataSet[position]
         // Get element from your _dataSet at this position and replace the
         // contents of the view with that element
@@ -58,16 +58,8 @@ class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, priv
         val sharedPref: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(viewHolder.itemView.context)
 
-        _currentUserId = sharedPref.getString("userId", " ")
-
-        var adminIDs : ArrayList<String> = ArrayList<String>()
-
-        for(admin in _admins){
-            adminIDs.add(admin.id)
-        }
-
         // TODO: remove the cross bars if current user is not admin (wait until user state is implemented)
-        if (!(_currentUserId!! in adminIDs)) viewHolder.memberKickButton.visibility = View.INVISIBLE
+        viewHolder.memberKickButton.visibility = View.INVISIBLE
 
         // load the images
         Glide.with(viewHolder.itemView)
