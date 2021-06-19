@@ -5,14 +5,22 @@ import com.example.shiristory.service.common.Constants.BASE_URL
 import com.example.shiristory.service.story.StoryApiService
 import com.example.shiristory.service.timeline.TimelineApiService
 import com.example.shiristory.service.user.UserApiService
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
+
 object RetrofitBuilder {
 
     private fun getRetrofit(): Retrofit {
+
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor())
+            .build()
+
         return Retrofit.Builder()
+            .client(client)
             .baseUrl(BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
