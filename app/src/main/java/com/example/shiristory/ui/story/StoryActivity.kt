@@ -246,7 +246,7 @@ class StoryActivity : AppCompatActivity() {
                 }
             }
 
-            RequestCodes.REQUEST_PREVIEW_IMAGE -> {
+            RequestCodes.REQUEST_PREVIEW_IMAGE , RequestCodes.REQUEST_PREVIEW_VIDEO-> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     Log.d(TAG, "uploading images")
                     _model.uploadFile(_mediaType!!,_mediaUri!!).observe(this, Observer {
