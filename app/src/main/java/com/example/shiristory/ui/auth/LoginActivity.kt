@@ -88,13 +88,13 @@ class LoginActivity : AppCompatActivity() {
                 editor.putString(R.string.jwt_refresh_key.toString(), it.refresh)
                 editor.apply()
 
-                login_button!!.setProgress(100)
+                login_button!!.progress = 100
 
                 finish()
             }
         })
 
-        login_button!!.setProgress(1)
+        login_button!!.progress = 1
 
     }
 }
