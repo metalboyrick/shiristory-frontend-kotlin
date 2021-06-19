@@ -19,11 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
+import com.example.shiristory.service.common.*
 import com.example.shiristory.service.common.Constants.BASE_WS_URL
-import com.example.shiristory.service.common.FileUtil
 import com.example.shiristory.service.common.MediaType
-import com.example.shiristory.service.common.MediaUtil
-import com.example.shiristory.service.common.RequestCodes
 import com.example.shiristory.service.story.models.OutMessage
 import com.example.shiristory.service.story.models.StoryEntry
 import com.google.gson.Gson
@@ -170,11 +168,18 @@ class StoryActivity : AppCompatActivity() {
 
             // empty the text box
             _textBoxView.text.clear()
+
+            ToolKits.hideSoftKeyboard(_context, _textBoxView)
         }
 
         // click listener for select attachment
         _selectMediaBtn.setOnClickListener {
             _mediaUtil.selectMedia()
+        }
+
+        // click listener for camera
+        _inputCameraBtn.setOnClickListener {
+            _mediaUtil.takePhoto()
         }
     }
 
@@ -213,8 +218,6 @@ class StoryActivity : AppCompatActivity() {
                         if (it.toString().contains("image")) {
                             _mediaType = MediaType.IMAGE
 
-                            // TODO:  do ui stuff for image
-                            // make it pop up from a modal window
                             val previewIntent = Intent(_context, SendPreviewActivity::class.java).apply{
                                 putExtra("URI", _mediaUri.toString())
                                 putExtra("type", MediaType.IMAGE.id)
@@ -224,7 +227,6 @@ class StoryActivity : AppCompatActivity() {
                         } else if (it.toString().contains("video")) {
                             _mediaType = MediaType.VIDEO
 
-                            // TODO: do ui stuff for video
                             val previewIntent = Intent(_context, SendPreviewActivity::class.java).apply{
                                 putExtra("URI", _mediaUri.toString())
                                 putExtra("type", MediaType.VIDEO.id)
@@ -246,6 +248,11 @@ class StoryActivity : AppCompatActivity() {
                     _mediaType = MediaType.IMAGE
 
                     // TODO: do ui stuff for captured image
+                    val previewIntent = Intent(_context, SendPreviewActivity::class.java).apply{
+                        putExtra("URI", _mediaUri.toString())
+                        putExtra("type", MediaType.IMAGE.id)
+                    }
+                    startActivityForResult(previewIntent, RequestCodes.REQUEST_PREVIEW_IMAGE)
 
                     Log.d(TAG, "raw camera capture uri:" + _mediaUri?.path!!)
                 }
