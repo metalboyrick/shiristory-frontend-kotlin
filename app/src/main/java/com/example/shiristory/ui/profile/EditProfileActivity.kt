@@ -35,7 +35,7 @@ class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback {
 
         ChiliPhotoPicker.init(
             loader = GlideImageLoader(),
-            authority = "lv.chi.sample.fileprovider"
+            authority = "com.example.shiristory.fileprovider"
         )
 
         new_nickname = findViewById(R.id.new_nickname)
