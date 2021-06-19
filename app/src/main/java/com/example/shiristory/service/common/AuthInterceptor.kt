@@ -30,7 +30,6 @@ class AuthInterceptor : Interceptor {
 
         // Creating the origin request object
         var request: Request = chain.request()
-
         Log.d(TAG, "Intercept request: " + request.url())
 
         // Add auth header if access token is available
@@ -45,9 +44,6 @@ class AuthInterceptor : Interceptor {
 
 
         if (response.code() != 200) {
-
-            // End the response
-            response.close()
 
             // If authentication error (token expired)
             if (response.code() == 401) {
@@ -88,9 +84,11 @@ class AuthInterceptor : Interceptor {
 
                 // Retry initial request
                 Log.d(TAG, "Add new accessToken to request: " + request.url())
-                request = addTokenToRequest(request, refreshTokenResponse.body()?.access!!)
-                Log.d(TAG, "Proceed request: " + request.url())
-                response = chain.proceed(request)
+                val retryRequest = addTokenToRequest(request, refreshTokenResponse.body()?.access!!)
+                Log.d(TAG, "Retry request: " + request.url())
+                response.close()
+                response = chain.proceed(retryRequest)
+                Log.d(TAG, "Response code: " + response.code())
 
             } else {
                 //handle other errors here
@@ -112,7 +110,7 @@ class AuthInterceptor : Interceptor {
 
     private fun addTokenToRequest(request: Request, token: String): Request {
         return request.newBuilder()
-            .addHeader("Authorization", "Bearer $token")
+            .header("Authorization", "Bearer $token")
             .build()
     }
 }
