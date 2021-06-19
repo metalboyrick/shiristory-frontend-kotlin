@@ -46,6 +46,19 @@ class FriendAdapter(private val _dataSet: ArrayList<User>, private val _model: C
         // create view holder instance and initialize components in each item
         val viewHolder = FriendViewHolder(view)
 
+        return viewHolder
+    }
+
+    // update values for each item in recyclerView
+    override fun onBindViewHolder(viewHolder: FriendAdapter.FriendViewHolder, position: Int) {
+        val friend: User = _dataSet[position]
+
+        // with context load url into imageView
+        Glide.with(viewHolder.itemView).load(friend.profile_pic_url)
+            .into(viewHolder.friend_profile_picture)
+        viewHolder.friend_nickname.text = friend.nickname
+        viewHolder.friend_id = friend.id
+
         // add handler when remove friend button is pressed ('x')
         viewHolder.remove_friend.setOnClickListener {
             val pos = viewHolder.adapterPosition
@@ -60,42 +73,29 @@ class FriendAdapter(private val _dataSet: ArrayList<User>, private val _model: C
                 // call remove friend API
                 val res: LiveData<ArrayList<String>> = _model.removeFriend(viewHolder.friend_id)
                 res.observe(context as LifecycleOwner, Observer {
+                    if(it != null) {
+                        // prevent redundant call of observers
+                        res.removeObservers(context as LifecycleOwner)
+                        Log.d("remove friend", "callback called")
+                        val statusCode = Integer.parseInt(it[0])
+                        val message: String = it[1]
+                        if (statusCode == 200) {
+                            Log.d(
+                                "friend nickname in observer",
+                                viewHolder.friend_nickname.text.toString()
+                            )
 
-                    // prevent redundant call of observers
-                    res.removeObservers(context as LifecycleOwner)
-                    Log.d("remove friend", "callback called")
-                    val statusCode = Integer.parseInt(it[0])
-                    val message: String = it[1]
-                    if (statusCode == 200) {
-                        Log.d(
-                            "friend nickname in observer",
-                            viewHolder.friend_nickname.text.toString()
-                        )
+                            // remove friend from list
+                            _dataSet.removeAt(pos);
 
-                        // remove friend from list
-                        _dataSet.removeAt(pos);
-
-                        // tell recycler view to update the display using latest adapter
-                        notifyItemRemoved(pos);
-                        notifyItemRangeChanged(0, getItemCount());
+                            // tell recycler view to update the display using latest adapter
+                            notifyItemRemoved(pos);
+                            notifyItemRangeChanged(0, getItemCount());
+                        }
                     }
                 })
             }
         }
-
-        return viewHolder
-    }
-
-    // update values for each item in recyclerView
-    override fun onBindViewHolder(viewHolder: FriendAdapter.FriendViewHolder, position: Int) {
-        val friend: User = _dataSet[position]
-
-        // with context load url into imageView
-        Glide.with(viewHolder.itemView).load(friend.profile_pic_url)
-            .into(viewHolder.friend_profile_picture)
-        viewHolder.friend_nickname.text = friend.nickname
-        viewHolder.friend_id = friend.id
-
 
     }
 
