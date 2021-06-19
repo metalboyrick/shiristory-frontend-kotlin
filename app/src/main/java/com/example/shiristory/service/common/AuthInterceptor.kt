@@ -20,40 +20,34 @@ class AuthInterceptor : Interceptor {
     private val TAG: String = this.javaClass.name
     private val _context: Context? = Shiristory.instance
 
-
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        val sharedPref: SharedPreferences = getDefaultSharedPreferences(_context)
+        val apiService: AuthenticationApiService = RetrofitBuilder.authenticationApiService
 
+        val sharedPref: SharedPreferences = getDefaultSharedPreferences(_context)
 
         val accessToken: String? = sharedPref.getString(R.string.jwt_access_key.toString(), null)
 
         // Creating the origin request object
         var request: Request = chain.request()
-
-        val apiService: AuthenticationApiService = RetrofitBuilder.authenticationApiService
-
         Log.d(TAG, "Intercept request: " + request.url())
 
-        // Add auth header
+        // Add auth header if access token is available
         if (accessToken != null) {
             Log.d(TAG, "Add accessToken to request: " + request.url())
-            request = request.newBuilder()
-                .addHeader("Authorization", "Bearer $accessToken")
-                .build()
+            request = addTokenToRequest(request, accessToken)
         }
 
-        // Executing the request by invoking procced function
-        // on the chain with the request object
         Log.d(TAG, "Proceed request: " + request.url())
         var response: Response = chain.proceed(request)
+        Log.d(TAG, "Response code: " + response.code())
 
-        Log.d(TAG, "Request code: " + response.code())
-        // Verifying the whether the request is executed or not
+
         if (response.code() != 200) {
+
+            // If authentication error (token expired)
             if (response.code() == 401) {
-                response.close()
-                // This block executes when the token is exprie
+
                 val refreshToken: String? =
                     sharedPref.getString(R.string.jwt_refresh_key.toString(), null)
 
@@ -61,54 +55,62 @@ class AuthInterceptor : Interceptor {
                 // Redirect to login page
                 if (refreshToken == null) {
                     Log.d(TAG, "User not logged in.")
-                    Log.d(TAG, "Redirect to login page.")
-                    val intent = Intent(_context, LoginActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    _context?.startActivity(intent)
+                    redirectToLogin()
                     return response
                 }
 
                 val data = mapOf("refresh" to refreshToken)
-                Log.d(TAG, Gson().toJson(data))
 
-                // get new access token
-                val call = apiService.refresh(json_body = Gson().toJson(data))
-
-                // Invoking the service call
+                // Get new access token
+                val call = apiService.getAccessToken(json_body = Gson().toJson(data))
                 val refreshTokenResponse = call.execute()
 
+                // If refresh token is invalid
+                // Redirect to login page
                 if (refreshTokenResponse.code() == 401) {
-                    Log.d(TAG, "Invalid refresh token")
-                    Log.d(TAG, "Redirect to login page.")
-                    val intent = Intent(_context, LoginActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    _context?.startActivity(intent)
+                    Log.d(TAG, "Invalid refresh token.")
+                    redirectToLogin()
                     return response
                 }
+                // Else save access token
+                else {
+                    val editor = sharedPref.edit()
+                    editor.putString(
+                        R.string.jwt_access_key.toString(),
+                        refreshTokenResponse.body()?.access
+                    )
+                    editor.apply()
+                }
 
-                //saving the access token in preference
-                val editor = sharedPref.edit()
-                editor.putString(
-                    R.string.jwt_access_key.toString(),
-                    refreshTokenResponse.body()?.access
-                )
-                editor.apply()
+                // Retry initial request
+                Log.d(TAG, "Add new accessToken to request: " + request.url())
+                val retryRequest = addTokenToRequest(request, refreshTokenResponse.body()?.access!!)
+                Log.d(TAG, "Retry request: " + request.url())
+                response.close()
+                response = chain.proceed(retryRequest)
+                Log.d(TAG, "Response code: " + response.code())
 
-                //replacing the new token in the origin request object
-                request = request.newBuilder()
-                    .addHeader("Authorization", "Bearer " + refreshTokenResponse.body()?.access!!)
-                    .build()
-
-
-                // Reinitialize the origin request
-                response = chain.proceed(request)
             } else {
                 //handle other errors here
                 Log.e(TAG, "Something bad happened. Code: " + response.code().toString())
             }
         }
 
+        Log.d(TAG, "Request completed.\n")
         return response
 
+    }
+
+    private fun redirectToLogin() {
+        Log.d(TAG, "Redirect to login page.")
+        val intent = Intent(_context, LoginActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        _context?.startActivity(intent)
+    }
+
+    private fun addTokenToRequest(request: Request, token: String): Request {
+        return request.newBuilder()
+            .header("Authorization", "Bearer $token")
+            .build()
     }
 }

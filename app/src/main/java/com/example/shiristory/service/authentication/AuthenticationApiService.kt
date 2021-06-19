@@ -15,7 +15,7 @@ interface AuthenticationApiService {
 
     @Headers("Content-Type: application/json")
     @POST("${USER_API_PREFIX}/jwt/refresh")
-    fun refresh(
+    fun getAccessToken(
         @Body json_body: String
     ): Call<Token>
 
