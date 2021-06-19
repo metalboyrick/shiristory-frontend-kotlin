@@ -62,13 +62,12 @@ class ContactFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // id of menu options pressed
         val id: Int = item.getItemId()
         var friend_op_name: String = "Default"
         var layoutId: Int = R.layout.friend_search_dialog
 
+        // change layout id according to operation
         if (id == R.id.search_friend) {
             Log.d("search friend", "pressed")
             friend_op_name = "Search"
@@ -80,21 +79,26 @@ class ContactFragment : Fragment() {
             layoutId = R.layout.friend_add_dialog
         }
 
+        // build a new dialog
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(friend_op_name)
 
+        // use layout for dialog
         val viewInflated: View = LayoutInflater.from(context)
             .inflate(layoutId, view as ViewGroup?, false)
 
+        // get the only input box in both search and add friend layout
         val input = viewInflated.findViewById(R.id.input) as EditText
         input.inputType = InputType.TYPE_CLASS_TEXT
 
+        // get other components
         val submit_button: Button = viewInflated.findViewById(R.id.submit)
         val exit_button: Button = viewInflated.findViewById(R.id.exit)
         val server_message : TextView = viewInflated.findViewById(R.id.message)
 
         builder.setView(viewInflated)
 
+        // show the dialog
         var dialog : AlertDialog = builder.show()
 
         exit_button.setOnClickListener {
@@ -108,24 +112,40 @@ class ContactFragment : Fragment() {
             }
             Log.d("Friend OP", friend_op_name)
             if (friend_op_name == "Search") {
-                Log.d("search friend", "Search friend API called")
+                // call the search friend API
                 var res : LiveData<ArrayList<User>> = _model.searchFriend(input.text.toString())
+
                 res.observe(viewLifecycleOwner, Observer {
-                        _recyclerView.adapter = FriendAdapter(it, _model)
-                        dialog.dismiss()
-                    })
-            } else if (friend_op_name == "Add") {
-                _model.addFriend(input.text.toString())
-                    .observe(viewLifecycleOwner, Observer {
-                        Log.d("status code received by observer",it[0])
-                        val statusCode = Integer.parseInt(it[0])
-                        val message : String? = it[1]
-                        Log.d("message received by observer",message!!)
-                        if (statusCode == 200) {
-                            getFriends()
+                        if(it != null) {
+                            // reinitialize adapter with new list of friends
+                            _recyclerView.adapter = FriendAdapter(it, _model)
+
+                            // close dialog
                             dialog.dismiss()
                         }
-                        server_message.setText(message)
+                    })
+            }
+            else if (friend_op_name == "Add") {
+                // call the add friend API
+                _model.addFriend(input.text.toString())
+                    .observe(viewLifecycleOwner, Observer {
+                        if(it != null) {
+                            Log.d("status code received by observer", it[0])
+
+                            val statusCode = Integer.parseInt(it[0])
+                            val message: String? = it[1]
+
+                            Log.d("message received by observer", message!!)
+
+                            // close dialog if successful
+                            if (statusCode == 200) {
+                                getFriends()
+                                dialog.dismiss()
+                            }
+
+                            // show server response
+                            server_message.setText(message)
+                        }
                     })
             }
         }
@@ -139,7 +159,10 @@ class ContactFragment : Fragment() {
         var res : LiveData<ArrayList<User>> = _model.getFriends()
 
         res.observe(viewLifecycleOwner, Observer {
-            _recyclerView.adapter = FriendAdapter(it, _model)
+            if(it != null){
+                _recyclerView.adapter = FriendAdapter(it, _model)
+            }
+
         })
     }
 

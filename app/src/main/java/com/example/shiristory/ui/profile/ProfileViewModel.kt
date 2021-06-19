@@ -27,6 +27,8 @@ class ProfileViewModel : ViewModel() {
     // We will call this method to get the data
     fun getUserProfile(): LiveData<User> {
 
+        _profile.value = null
+
         val call: Call<UserProfileResponse> = _service.getUserProfile()
         call.enqueue(object : Callback<UserProfileResponse> {
 

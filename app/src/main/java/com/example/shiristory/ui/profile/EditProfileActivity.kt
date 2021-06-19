@@ -81,6 +81,7 @@ class EditProfileActivity : AppCompatActivity(), PhotoPickerFragment.Callback {
         ).observe(this, Observer {
             if (it) {
                 Log.d("update status", "OK")
+                // exit current activity
                 finish();
                 super.onBackPressed();
             }
