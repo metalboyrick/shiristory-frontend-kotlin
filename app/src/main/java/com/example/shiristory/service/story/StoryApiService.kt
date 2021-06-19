@@ -50,7 +50,7 @@ interface StoryApiService {
     ): Call<FileUploadResponse>
 
     @Headers("Content-Type: application/json")
-    @POST("${STORY_API_PREFIX}/create")
+    @POST("${STORY_API_PREFIX}/create/")
     fun createStoryGroup(
         @Body  json_body: String
     ): Call<GroupCreateResponse>

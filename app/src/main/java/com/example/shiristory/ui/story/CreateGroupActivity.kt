@@ -101,7 +101,7 @@ class CreateGroupActivity : AppCompatActivity() {
             }
         }
 
-        if (members.size <= 1){
+        if (members.size <= 1) {
             return
         }
         Log.d("banana", "wwwwwwwww")
@@ -113,7 +113,8 @@ class CreateGroupActivity : AppCompatActivity() {
             "first_story" to firstStory
         )
 
-        val call = RetrofitBuilder.storyApiService.createStoryGroup(Gson().toJson(data))
+        val call: Call<GroupCreateResponse> =
+            RetrofitBuilder.storyApiService.createStoryGroup(json_body = Gson().toJson(data))
 
         Log.d("banana", Gson().toJson(data))
 
@@ -128,11 +129,16 @@ class CreateGroupActivity : AppCompatActivity() {
                 response: Response<GroupCreateResponse>
             ) {
 
-                val storyIntent = Intent(applicationContext, StoryActivity::class.java).apply {
-                    putExtra("groupId", response.body()?.group_id)
-                    putExtra("groupName", inputGroupName.text.toString())
+                if (response.body() != null) {
+                    Log.d("banana", response.body()?.group_id!!)
+                    val storyIntent = Intent(applicationContext, StoryActivity::class.java).apply {
+                        putExtra("groupId", response.body()?.group_id)
+                        putExtra("groupName", inputGroupName.text.toString())
+                    }
+                    startActivity(storyIntent)
                 }
-                startActivity(storyIntent)
+
+
             }
         })
     }

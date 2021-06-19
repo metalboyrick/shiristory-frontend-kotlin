@@ -18,11 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shiristory">
 
-        <activity android:name=".ui.story.SendPreviewActivity"></activity>
+        <activity android:name=".ui.story.SendPreviewActivity"
+            android:parentActivityName=".ui.story.StoryActivity"/>
 
-        <activity android:name=".ui.story.StorySettingsActivity" />
+        <activity android:name=".ui.story.StorySettingsActivity"
+            android:parentActivityName=".ui.story.StoryActivity"/>
 
-        <activity android:name=".ui.story.StoryActivity" />
+        <activity android:name=".ui.story.StoryActivity"
+            android:parentActivityName=".MainActivity"/>
 
         <activity
             android:name=".ui.story.CreateGroupActivity"
@@ -31,7 +34,8 @@
         <activity android:name=".ui.auth.SignupActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
 
-        <activity android:name=".ui.profile.EditProfileActivity" />
+        <activity android:name=".ui.profile.EditProfileActivity"
+            android:parentActivityName=".MainActivity"/>
 
         <activity
             android:name=".MainActivity"
