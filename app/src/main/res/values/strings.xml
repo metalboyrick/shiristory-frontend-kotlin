@@ -26,11 +26,11 @@
 
     <string name="login_username">Your username</string>
     <string name="login_password">Your password</string>
-    <string name="goto_sign_up">Create one</string>
+    <string name="goto_sign_up">Sign up</string>
 
     <string name="sign_up_username_hint">New username</string>
     <string name="sign_up_password_hint">New password</string>
-    <string name="sig_nup_email_hint">New email</string>
+    <string name="sign_up_email_hint">New email</string>
 
     <!--
     This string is used for square devices and overridden by hello_world in

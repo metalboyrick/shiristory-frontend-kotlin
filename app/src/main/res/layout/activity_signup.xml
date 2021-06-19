@@ -20,14 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:hint="@string/signup_username_hint"
+            android:hint="@string/sign_up_username_hint"
             android:paddingLeft="10dp" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/sign_up_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/signup_password_hint"
+            android:hint="@string/sign_up_password_hint"
             android:inputType="textPassword"
             android:paddingLeft="10dp" />
 
@@ -36,13 +36,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:hint="@string/signup_email_hint"
-            android:inputType="textPassword"
+            android:hint="@string/sign_up_email_hint"
+            android:inputType="textEmailAddress"
             android:paddingLeft="10dp" />
 
 
         <com.dd.processbutton.iml.ActionProcessButton
-            android:id="@+id/sign_in_button"
+            android:id="@+id/sign_up_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"

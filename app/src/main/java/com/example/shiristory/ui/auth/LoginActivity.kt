@@ -1,6 +1,5 @@
 package com.example.shiristory.ui.auth
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -13,16 +12,16 @@ import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.dd.processbutton.iml.ActionProcessButton
 import com.example.shiristory.R
-import com.example.shiristory.SignupActivity
 import com.example.shiristory.service.authentication.AuthenticationApiService
 import com.example.shiristory.service.authentication.models.Token
 import com.example.shiristory.service.common.RetrofitBuilder
-import com.example.shiristory.ui.profile.EditProfileActivity
 import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 class LoginActivity : AppCompatActivity() {
@@ -60,7 +59,15 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<Token>, response: Response<Token>) {
-                _loginResponse.value = response.body()
+                if (response.code() == 200) {
+                    _loginResponse.value = response.body()
+                } else {
+                    login_button?.progress = -1
+                    Timer().schedule(3000){
+                        login_button?.progress = 0
+                    }
+                }
+
             }
 
         })

@@ -1,6 +1,7 @@
 package com.example.shiristory.ui.profile
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,9 +14,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.observe
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
 import com.example.shiristory.service.user.models.User
+import com.example.shiristory.ui.auth.LoginActivity
 import com.example.shiristory.ui.timeline.PostAdapter
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -26,6 +29,7 @@ class ProfileFragment : Fragment() {
     private var profilePic: CircleImageView? = null
     private var bio: TextView? = null
     private var editProfileButton: Button? = null
+    private var logoutButton: Button? = null
     private var _user : User? = null
 
     override fun onCreateView(
@@ -44,6 +48,7 @@ class ProfileFragment : Fragment() {
         profilePic = view.findViewById(R.id.profile_picture)
         bio = view.findViewById(R.id.bio)
         editProfileButton = view.findViewById(R.id.edit_profile)
+        logoutButton = view.findViewById(R.id.logout)
 
         // add listener, that invokes edit profile activity and provide starting values when edit profile is pressed
         editProfileButton?.setOnClickListener {
@@ -51,6 +56,22 @@ class ProfileFragment : Fragment() {
             intent.putExtra("nickname",_user?.nickname)
             intent.putExtra("bio",_user?.bio)
             intent.putExtra("profile_pic_url",_user?.profile_pic_url)
+            startActivity(intent)
+        }
+
+        // client side logout
+        logoutButton?.setOnClickListener {
+            val sharedPref: SharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(context)
+            val editor = sharedPref.edit()
+
+            // remove stored JWT tokens in shared preference
+            editor.remove(R.string.jwt_access_key.toString())
+            editor.remove(R.string.jwt_refresh_key.toString())
+            editor.apply()
+
+            // go to login page
+            val intent = Intent(context, LoginActivity::class.java)
             startActivity(intent)
         }
 

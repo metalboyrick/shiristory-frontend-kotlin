@@ -1,5 +1,6 @@
-package com.example.shiristory
+package com.example.shiristory.ui.auth
 
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.dd.processbutton.iml.ActionProcessButton
+import com.example.shiristory.MainActivity
+import com.example.shiristory.R
 import com.example.shiristory.service.authentication.AuthenticationApiService
 import com.example.shiristory.service.authentication.models.Token
 import com.example.shiristory.service.common.RetrofitBuilder
@@ -18,6 +21,8 @@ import com.rengwuxian.materialedittext.MaterialEditText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.concurrent.schedule
 
 class SignupActivity : AppCompatActivity() {
 
@@ -57,7 +62,15 @@ class SignupActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<Token>, response: Response<Token>) {
-                _signUpResponse.value = response.body()
+                if (response.code() == 200) {
+                    _signUpResponse.value = response.body()
+                } else {
+                    sign_up_button?.progress = -1
+                    Timer().schedule(3000){
+                        sign_up_button?.progress = 0
+                    }
+                }
+
             }
 
         })
@@ -89,6 +102,8 @@ class SignupActivity : AppCompatActivity() {
 
                 sign_up_button!!.progress = 100
 
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
                 finish()
             }
         })

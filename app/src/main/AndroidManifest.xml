@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shiristory">
-        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".ui.auth.SignupActivity"/>
         <activity android:name=".ui.story.StorySettingsActivity" />
         <activity android:name=".ui.story.StoryActivity" />
         <activity android:name=".ui.story.CreateGroupActivity" />
