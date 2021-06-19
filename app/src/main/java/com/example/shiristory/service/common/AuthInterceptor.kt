@@ -29,7 +29,7 @@ class AuthInterceptor : Interceptor {
         val sharedPref: SharedPreferences = getDefaultSharedPreferences(_context)
 
 
-        var accessToken: String? = sharedPref.getString(R.string.jwt_access_key.toString(), null)
+        val accessToken: String? = sharedPref.getString(R.string.jwt_access_key.toString(), null)
 
         // Creating the origin request object
         var request: Request = chain.request()
