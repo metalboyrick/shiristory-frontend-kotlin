@@ -47,6 +47,7 @@ class StoryActivity : AppCompatActivity() {
     private lateinit var _selectMediaBtn: ImageButton
     private lateinit var _inputVoicemailBtn: ImageButton
     private lateinit var _inputCameraBtn: ImageButton
+    private lateinit var _inputVideoBtn: ImageButton
 
     private val _mediaUtil =
         MediaUtil(this)
@@ -132,6 +133,7 @@ class StoryActivity : AppCompatActivity() {
         _textBoxView = findViewById(R.id.input_msg)
         _selectMediaBtn = findViewById(R.id.input_attachment)
         _inputCameraBtn = findViewById(R.id.input_camera)
+        _inputVideoBtn = findViewById(R.id.input_video)
         _inputVoicemailBtn = findViewById(R.id.voicemail_btn)
 
 
@@ -180,6 +182,11 @@ class StoryActivity : AppCompatActivity() {
         // click listener for camera
         _inputCameraBtn.setOnClickListener {
             _mediaUtil.takePhoto()
+        }
+
+        // click listener for video
+        _inputVideoBtn.setOnClickListener {
+            _mediaUtil.recordVideo()
         }
     }
 
