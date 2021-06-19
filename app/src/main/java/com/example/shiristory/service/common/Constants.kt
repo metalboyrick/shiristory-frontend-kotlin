@@ -12,10 +12,6 @@ object Constants {
     const val STORY_API_PREFIX = "story"
     const val USER_API_PREFIX = "user"
 
-    // debug token
-
-    const val TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjI0MDgzMTM4LCJqdGkiOiJiODk0Zjc5MzI5YmQ0Mjc3YmExMjdjNzMyNzI2Y2EyNCIsInVzZXJfaWQiOiJicm9za2kifQ.tC6eKiCrWORNqmrAqw0XTjxYi4V1TtRxfbiCuK7M8cw"
-
     // story status
     const val ONGOING = 0
     const val FINISHED = 1

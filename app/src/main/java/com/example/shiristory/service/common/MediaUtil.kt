@@ -3,8 +3,11 @@ package com.example.shiristory.service.common
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.media.MediaRecorder
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import java.io.File
@@ -14,8 +17,11 @@ import java.util.*
 class MediaUtil(private val _activity: Activity) {
 
     private lateinit var _photoUri: Uri
+    private lateinit var _audioUri: Uri
+    val audioRecorder: MediaRecorder = MediaRecorder()
 
     fun getPhotoUri(): Uri = _photoUri
+    fun getAudioUri(): Uri = _audioUri
 
     // Launch camera intent to capture an image
     // The image will be saved in external cache folder of the app
@@ -85,5 +91,48 @@ class MediaUtil(private val _activity: Activity) {
             arrayOf(Manifest.permission.CAMERA),
             RequestCodes.REQUEST_CAMERA_PERMISSION
         )
+    }
+
+    // audio recording implementations
+    private fun requestMicPermission() {
+        ActivityCompat.requestPermissions(
+            _activity,
+            arrayOf(Manifest.permission.RECORD_AUDIO),
+            RequestCodes.REQUEST_AUDIO_PERMISSION
+        )
+    }
+
+    // toggle functions determine to start or stop recording
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun recordAudio(toggleRecord: Boolean){
+        if(toggleRecord == true){
+            requestMicPermission()
+
+            val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+            val audioFile = File.createTempFile(
+                "3GP_${timeStamp}_tmp", /* prefix */
+                ".3gp", /* suffix */
+                _activity.externalCacheDir /* directory */
+            )
+
+            audioFile.also{
+                _audioUri = FileProvider.getUriForFile(
+                    _activity,
+                    "com.example.shiristory.fileprovider",
+                    it
+                )
+
+                audioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC)
+                audioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                audioRecorder.setOutputFile(audioFile)
+                audioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+
+                audioRecorder.prepare()
+                audioRecorder.start()
+            }
+        } else   {
+            audioRecorder.stop()
+            audioRecorder.release()
+        }
     }
 }

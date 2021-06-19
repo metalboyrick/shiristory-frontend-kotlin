@@ -11,6 +11,7 @@
     <color name="charcoal_900">#283845</color>
     <color name="charcoal_800">#3a4d5d</color>
     <color name="red_400">#ec5656</color>
+    <color name="red_100">#f0c7c7</color>
     <color name="black_800">#333333</color>
     <color name="black_200">#EEEEEE</color>
     <color name="black">#FF000000</color>
@@ -21,5 +22,6 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+    <color name="gray_100">#ededed</color>
 
 </resources>
