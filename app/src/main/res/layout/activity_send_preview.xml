@@ -21,12 +21,16 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:foregroundGravity="center_horizontal"
             android:translationY="200dp">
 
             <VideoView
                 android:id="@+id/story_preview_media_controller"
                 android:layout_width="match_parent"
                 android:layout_height="230dp"
+                android:layout_gravity="center_horizontal"
+                android:foregroundGravity="center_horizontal"
                 tools:visibility="visible" />
         </FrameLayout>
 

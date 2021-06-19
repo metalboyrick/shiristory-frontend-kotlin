@@ -1,11 +1,13 @@
 package com.example.shiristory.ui.story
 
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Switch
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shiristory.R
@@ -18,6 +20,8 @@ class StorySettingsActivity : AppCompatActivity() {
     private val _model: StorySettingsViewModel by viewModels()
     private lateinit var _groupNameView: EditText
     private lateinit var _groupStatusView: Switch
+    private var _currentUsername: String? = ""
+    private var _currentUserId: String? = ""
     private val _context = this@StorySettingsActivity
     private lateinit var _recyclerView: RecyclerView
 
@@ -31,6 +35,11 @@ class StorySettingsActivity : AppCompatActivity() {
 
         // get the group id from the previous page
         _currentGroupId = intent.getStringExtra("groupId")
+
+        val sharedPref: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this)
+
+        _currentUserId = sharedPref.getString("userId", " ")
 
         // inject linear layout manager
         _recyclerView.layoutManager = LinearLayoutManager(_context)
@@ -47,7 +56,7 @@ class StorySettingsActivity : AppCompatActivity() {
             })
         }
 
-
+        // remove cross if user is admin
 
 
 

@@ -29,6 +29,7 @@
             android:layout_height="0px"
             android:layout_margin="7dp"
             android:layout_weight="1"
+            android:layout_gravity="bottom"
             android:orientation="horizontal">
 
             <ImageButton
@@ -64,12 +65,11 @@
                         android:layout_weight="1"
                         android:autofillHints=""
                         android:background="#00FFFFFF"
-                        android:ems="10"
                         android:hint="@string/msg_hint"
-                        android:inputType="textPostalAddress"
-                        android:padding="12dp"
+                        android:inputType="text"
+                        android:padding="7dp"
                         android:singleLine="false"
-                        android:textSize="14sp" />
+                        android:textSize="20sp" />
 
                     <ImageButton
                         android:id="@+id/input_attachment"

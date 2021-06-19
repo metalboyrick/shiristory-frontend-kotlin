@@ -20,7 +20,8 @@
 
         <activity android:name=".ui.story.SendPreviewActivity"></activity>
         <activity android:name=".ui.story.StorySettingsActivity" />
-        <activity android:name=".ui.story.StoryActivity" />
+        <activity android:name=".ui.story.StoryActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.story.CreateGroupActivity" />
 
         <activity android:name=".ui.auth.SignupActivity"/>

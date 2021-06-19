@@ -1,11 +1,13 @@
 package com.example.shiristory.ui.story
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
@@ -18,6 +20,7 @@ class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, priv
     RecyclerView.Adapter<MemberListAdapter.MemberListViewHolder>() {
 
     private val TAG = this.javaClass.name
+    private var _currentUserId: String? = ""
 
     /**
      * Provide a reference to the type of views that you are using
@@ -40,6 +43,8 @@ class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, priv
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.friend_item, viewGroup, false)
 
+
+
         return MemberListViewHolder(view)
     }
 
@@ -50,13 +55,26 @@ class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, priv
         // contents of the view with that element
         viewHolder.memberName.text = member.nickname
 
+        val sharedPref: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(viewHolder.itemView.context)
+
+        _currentUserId = sharedPref.getString("userId", " ")
+
+        var adminIDs : ArrayList<String> = ArrayList<String>()
+
+        for(admin in _admins){
+            adminIDs.add(admin.id)
+        }
+
+        // TODO: remove the cross bars if current user is not admin (wait until user state is implemented)
+        if (!(_currentUserId!! in adminIDs)) viewHolder.memberKickButton.visibility = View.INVISIBLE
+
         // load the images
         Glide.with(viewHolder.itemView)
             .load(member.profilePicUrl)
             .into(viewHolder.memberPicture)
 
-        // TODO: remove the cross bars if current user is not admin (wait until user state is implemented)
-//        if (!(member in _admins)) viewHolder.memberKickButton.visibility = View.INVISIBLE
+
     }
 
     // Return the size of your _dataSet (invoked by the layout manager)
