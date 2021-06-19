@@ -1,21 +1,20 @@
 package com.example.shiristory.ui.story
 
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.VideoView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
 import com.example.shiristory.service.common.MediaType
 import com.example.shiristory.service.story.models.StoryEntry
 
-class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _model: StoryViewModel) :
-        RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
+class StoryAdapter(
+    private val _dataSet: ArrayList<StoryEntry>,
+    private val _model: StoryViewModel
+) :
+    RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 
     private val TAG = this.javaClass.name
 
@@ -28,8 +27,8 @@ class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _mod
         val storyContent: TextView = view.findViewById(R.id.story_text_content)
         val storyAuthor: TextView = view.findViewById(R.id.story_author)
         val storyImage: ImageView = view.findViewById(R.id.image_content)
-        val storyVideo : VideoView = view.findViewById(R.id.video_content)
-        val playAudioBtn : Button = view.findViewById(R.id.audio_content)
+        val storyVideo: VideoView = view.findViewById(R.id.video_content)
+        val playAudioBtn: Button = view.findViewById(R.id.audio_content)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -40,7 +39,7 @@ class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _mod
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): StoryViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.story_part_item, viewGroup, false)
+            .inflate(R.layout.story_part_item, viewGroup, false)
 
         return StoryViewHolder(view)
     }
@@ -53,7 +52,7 @@ class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _mod
 
         viewHolder.storyAuthor.text = "By: ${storyEntry.author}"
 
-        when(storyEntry.type){
+        when (storyEntry.type) {
             // handle text
             MediaType.TEXT.id -> {
                 viewHolder.storyContent.text = storyEntry.content
@@ -75,6 +74,14 @@ class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _mod
             // handle video
             MediaType.VIDEO.id -> {
 
+                viewHolder.storyContent.visibility = View.GONE
+                viewHolder.storyVideo.visibility = View.VISIBLE
+
+                val mediaController = MediaController(viewHolder.itemView.context)
+                val postVideo = viewHolder.storyVideo
+                mediaController.setAnchorView(postVideo)
+                postVideo.setMediaController(mediaController)
+                postVideo.setVideoPath(storyEntry.content)
             }
         }
 
@@ -84,7 +91,7 @@ class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _mod
     // Return the size of your _dataSet (invoked by the layout manager)
     override fun getItemCount() = _dataSet.size
 
-    fun addItem(newMsg : StoryEntry){
+    fun addItem(newMsg: StoryEntry) {
         _dataSet.add(newMsg)
         notifyDataSetChanged()
     }

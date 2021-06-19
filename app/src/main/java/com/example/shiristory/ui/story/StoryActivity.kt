@@ -30,13 +30,13 @@ class StoryActivity : AppCompatActivity() {
     private val _context = this@StoryActivity
     private val _client: OkHttpClient = OkHttpClient()
 
-    private var _currentGroupId : String? = ""
+    private var _currentGroupId: String? = ""
     private val _model: StoryViewModel by viewModels()
 
     private lateinit var _storyAdapter: StoryAdapter
     private lateinit var _recyclerView: RecyclerView
     private lateinit var _textBoxView: EditText
-    private lateinit var _sendMessageBtn : ImageButton
+    private lateinit var _sendMessageBtn: ImageButton
 
     private val _page: Int = 1
     private val _size: Int = 20
@@ -57,9 +57,9 @@ class StoryActivity : AppCompatActivity() {
         override fun onMessage(webSocket: WebSocket, text: String) {
             Log.d(SOCKET_TAG, "Receiving : $text")
 
-            if("story_id" in text){
+            if ("story_id" in text) {
                 // parse JSON string to object
-                val newMsg : StoryEntry = gson.fromJson(text, StoryEntry::class.java)
+                val newMsg: StoryEntry = gson.fromJson(text, StoryEntry::class.java)
 
                 runOnUiThread {
                     // Stuff that updates the UI
@@ -67,7 +67,6 @@ class StoryActivity : AppCompatActivity() {
                     _storyAdapter.addItem(newMsg)
 
                 }
-
 
 
             }
@@ -103,13 +102,13 @@ class StoryActivity : AppCompatActivity() {
 
         // set the title of the actionbar
         val actionBar = supportActionBar
-        actionBar?.title =  intent.getStringExtra("groupName")
+        actionBar?.title = intent.getStringExtra("groupName")
 
         // display the messages
-        if(_currentGroupId != null){
+        if (_currentGroupId != null) {
             _model.getPostedStories(_page, _size, _currentGroupId!!).observe(this, Observer {
                 if (it != null) {
-                    Log.d(TAG,it.toString())
+                    Log.d(TAG, it.toString())
                     _storyAdapter = StoryAdapter(ArrayList(it), _model)
                     _recyclerView.adapter = _storyAdapter
                 }
@@ -118,7 +117,8 @@ class StoryActivity : AppCompatActivity() {
 
         // TODO: websocket connection handling
         // start the ws
-        val request: Request = Request.Builder().url(BASE_WS_URL + "ws/$_currentGroupId/stories").build()
+        val request: Request =
+            Request.Builder().url(BASE_WS_URL + "ws/$_currentGroupId/stories").build()
         val listener = StoryWebSocketListener()
         val ws = _client.newWebSocket(request, listener)
 
@@ -156,7 +156,7 @@ class StoryActivity : AppCompatActivity() {
         // Handle item selection
         return when (item.itemId) {
             R.id.action_story_goto_settings -> {
-                val settingsIntent = Intent(_context, StorySettingsActivity::class.java).apply{
+                val settingsIntent = Intent(_context, StorySettingsActivity::class.java).apply {
                     putExtra("groupId", _currentGroupId)
                 }
                 ContextCompat.startActivity(_context, settingsIntent, null)
