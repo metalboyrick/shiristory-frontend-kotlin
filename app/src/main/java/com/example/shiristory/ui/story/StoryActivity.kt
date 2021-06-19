@@ -23,11 +23,6 @@ import com.google.gson.Gson
 import okhttp3.*
 import okio.ByteString
 
-const val TEXT  = 0
-const val IMAGE = 1
-const val AUDIO = 2
-const val VIDEO = 3
-
 class StoryActivity : AppCompatActivity() {
 
     private val TAG = this.javaClass.name
@@ -134,9 +129,9 @@ class StoryActivity : AppCompatActivity() {
                 "chat_message",
                 _currentGroupId!!,
                 "vaaniscool",                       // hardcoded for now
-                TEXT,
+                MediaType.TEXT.id,
                 _textBoxView.text.toString(),
-                TEXT,
+                MediaType.TEXT.id,
                 0
             )
 
