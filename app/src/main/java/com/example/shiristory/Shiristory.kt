@@ -1,18 +1,16 @@
 package com.example.shiristory
 
 import android.app.Application
-import android.content.Context
 
 class Shiristory : Application() {
 
-    private lateinit var context: Context
-
     override fun onCreate() {
         super.onCreate()
-        context = applicationContext
+        instance = this
     }
 
-    fun getAppContext(): Context? {
-        return context
+    companion object {
+        lateinit var instance: Shiristory
+            private set
     }
 }

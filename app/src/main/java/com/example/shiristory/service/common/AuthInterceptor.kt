@@ -18,11 +18,12 @@ import okhttp3.Response
 class AuthInterceptor : Interceptor {
 
     private val TAG: String = this.javaClass.name
-    private val _context: Context? = Shiristory().getAppContext()
+    private val _context: Context? = Shiristory.instance
     private val _service: AuthenticationApiService = RetrofitBuilder.authenticationApiService
 
 
     override fun intercept(chain: Interceptor.Chain): Response {
+
 
 
         val sharedPref: SharedPreferences = getDefaultSharedPreferences(_context)
@@ -33,10 +34,12 @@ class AuthInterceptor : Interceptor {
         // Creating the origin request object
         var request: Request = chain.request()
 
+        Log.d(TAG, "Intercept request: " + request.url())
+
         // Add auth header
         if (accessToken != null) {
             request = request.newBuilder()
-                .header("Authorization", accessToken)
+                .addHeader("Authorization", accessToken)
                 .build()
         }
 
@@ -55,7 +58,9 @@ class AuthInterceptor : Interceptor {
                 // Redirect to login page
                 if (refreshToken == null) {
                     Log.d(TAG, "User not logged in.")
+                    Log.d(TAG, "Redirect to login page.")
                     val intent = Intent(_context, LoginActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     _context?.startActivity(intent)
                     return response
                 }
@@ -70,7 +75,9 @@ class AuthInterceptor : Interceptor {
 
                 if (refreshTokenResponse.code() == 401) {
                     Log.d(TAG, "Invalid refresh token")
+                    Log.d(TAG, "Redirect to login page.")
                     val intent = Intent(_context, LoginActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     _context?.startActivity(intent)
                     return response
                 }
@@ -85,7 +92,7 @@ class AuthInterceptor : Interceptor {
 
                 //replacing the new token in the origin request object
                 request = request.newBuilder()
-                    .header("Authorization", refreshTokenResponse.body()?.access!!)
+                    .addHeader("Authorization", refreshTokenResponse.body()?.access!!)
                     .build()
 
                 // Reinitialize the origin request
