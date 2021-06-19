@@ -24,13 +24,13 @@
         android:id="@+id/submit"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="@string/search_friend"/>
+        android:text="@string/contact_search_friend"/>
 
     <Button
         android:id="@+id/exit"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/red_400"
-        android:text="@string/cancel"/>
+        android:text="@string/contact_operation_cancel"/>
 
 </LinearLayout>

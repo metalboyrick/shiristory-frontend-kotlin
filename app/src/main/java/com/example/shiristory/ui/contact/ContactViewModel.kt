@@ -28,6 +28,7 @@ class ContactViewModel : ViewModel() {
 
     // We will call this method to get the data
     fun getFriends(): LiveData<ArrayList<User>> {
+        _friends.value = null;
 
         val call: Call<UserProfileResponse> = _service.getUserProfile()
         call.enqueue(object : Callback<UserProfileResponse> {
@@ -54,16 +55,18 @@ class ContactViewModel : ViewModel() {
     fun updateStatusWithResponse(_status : MutableLiveData<ArrayList<String>> ,
                                  response : Response<GenericResponse> ){
         val statusCode = response.code().toString()
-        var message : String? = null
+        var message : String? = "Default error message"
 
         if (response.isSuccessful) {
             val addFriendResponse = response.body()
             message = addFriendResponse?.message
 
-        } else {
+        }
+        else {
             if(statusCode == "500"){
                 message = "Internal server error"
             }
+            // try to find a field containing errors
             else{
                 val errorMsg : APIError =
                     Gson().fromJson(response.errorBody()!!.charStream(), APIError::class.java)
@@ -94,10 +97,15 @@ class ContactViewModel : ViewModel() {
             }
 
         }
+
+        // update mutable live data and notify all observers using postValue
         _status.postValue(arrayListOf(statusCode,message!!))
     }
 
     fun addFriend(username: String) : LiveData<ArrayList<String>>{
+
+        _addFriendStatus.value = null
+
         val call: Call<GenericResponse> = _service.addFriend(friend_username = username)
         call.enqueue(object : Callback<GenericResponse> {
 
@@ -122,6 +130,9 @@ class ContactViewModel : ViewModel() {
     }
 
     fun removeFriend(friendId : String) : LiveData<ArrayList<String>>{
+
+        _removeFriendStatus.value = null
+
         val call: Call<GenericResponse> = _service.removeFriend(friend_id = friendId)
         call.enqueue(object : Callback<GenericResponse> {
 
@@ -146,6 +157,9 @@ class ContactViewModel : ViewModel() {
     }
 
     fun searchFriend(friendNickname : String) : LiveData<ArrayList<User>>{
+
+        _friends.value = null
+
         val call: Call<SearchFriendResponse> = _service.searchFriend(friend_nickname = friendNickname)
         call.enqueue(object : Callback<SearchFriendResponse> {
 

@@ -19,14 +19,17 @@
     <string name="post_add_hint">What\'s your story?</string>
     <string name="post_add_select_media">Photo/Video</string>
 
-    <string name="default_friend_name">Elon Musk</string>
-    <string name="add_friend">Add friend</string>
-    <string name="search_friend">Find friend</string>
-    <string name="cancel">Cancel</string>
+    <string name="contact_default_friend_name">Elon Musk</string>
+    <string name="contact_add_friend">Add friend</string>
+    <string name="contact_search_friend">Find friend</string>
+    <string name="contact_operation_cancel">Cancel</string>
+
     <string name="login_username">Your username</string>
     <string name="login_password">Your password</string>
-    <string name="signup_username">Login</string>
-    <string name="signup_password">Login</string>
+
+    <string name="signup_username">New username</string>
+    <string name="signup_password">New password</string>
+    <string name="signup_email">New email</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.

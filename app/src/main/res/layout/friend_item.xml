@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:paddingLeft="20dp"
-                android:text="@string/default_friend_name"
+                android:text="@string/contact_default_friend_name"
                 android:textSize="25sp">
 
             </TextView>

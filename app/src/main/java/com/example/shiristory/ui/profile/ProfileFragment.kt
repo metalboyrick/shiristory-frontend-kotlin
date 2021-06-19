@@ -45,6 +45,7 @@ class ProfileFragment : Fragment() {
         bio = view.findViewById(R.id.bio)
         editProfileButton = view.findViewById(R.id.edit_profile)
 
+        // add listener, that invokes edit profile activity and provide starting values when edit profile is pressed
         editProfileButton?.setOnClickListener {
             val intent = Intent(context, EditProfileActivity::class.java)
             intent.putExtra("nickname",_user?.nickname)
@@ -53,10 +54,13 @@ class ProfileFragment : Fragment() {
             startActivity(intent)
         }
 
+        // get profile data
         _model.getUserProfile().observe(viewLifecycleOwner, Observer {
-            nickname?.setText(it.nickname)
-            bio?.setText(it.bio)
-            Glide.with(this).load(it.profile_pic_url).into(profilePic!!)
+            if(it != null){
+                nickname?.setText(it.nickname)
+                bio?.setText(it.bio)
+                Glide.with(this).load(it.profile_pic_url).into(profilePic!!)
+            }
         })
 
     }
@@ -66,10 +70,12 @@ class ProfileFragment : Fragment() {
         super.onResume()
 
         _model.getUserProfile().observe(viewLifecycleOwner, Observer {
-            nickname?.setText(it.nickname)
-            bio?.setText(it.bio)
-            Glide.with(this).load(it.profile_pic_url).into(profilePic!!)
-            _user = it
+            if(it != null) {
+                nickname?.setText(it.nickname)
+                bio?.setText(it.bio)
+                Glide.with(this).load(it.profile_pic_url).into(profilePic!!)
+                _user = it
+            }
         })
     }
 
