@@ -5,10 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.shiristory.service.common.RetrofitBuilder
+import com.example.shiristory.service.common.models.GenericResponse
 import com.example.shiristory.service.story.StoryApiService
+import com.example.shiristory.service.story.models.DeleteMemberRequest
 import com.example.shiristory.service.story.models.GroupInfoResponse
 import com.example.shiristory.service.story.models.GroupListEntry
 import com.example.shiristory.service.story.models.GroupListResponse
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,6 +41,24 @@ class StorySettingsViewModel: ViewModel() {
         return _getGroupInfo
     }
 
-    // TODO: leave group (Wait for user state implementation)
+    // TODO: leave group
+    fun leaveGroup(memberId: String, groupId:String){
 
+        val targetMember = DeleteMemberRequest(memberId = memberId)
+
+        val call: Call<GenericResponse> = _service.deleteMember(groupId, Gson().toJson(targetMember))
+        call.enqueue(object : Callback<GenericResponse> {
+
+            override fun onFailure(call: Call<GenericResponse>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+
+            override fun onResponse(call: Call<GenericResponse>, response: Response<GenericResponse>) {
+                if (response.body() != null) {
+                    Log.e(TAG, "Delete OK!!!")
+                }
+            }
+
+        })
+    }
 }

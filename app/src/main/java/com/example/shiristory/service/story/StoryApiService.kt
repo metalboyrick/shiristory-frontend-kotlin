@@ -32,9 +32,10 @@ interface StoryApiService {
     ): Call<GroupInfoResponse>
 
     // delete member
-    @DELETE("${Constants.STORY_API_PREFIX}/{group_id}/admin/member")
+    @HTTP(method = "DELETE", path = "${Constants.STORY_API_PREFIX}/{group_id}/admin/member", hasBody = true)
     fun deleteMember(
-        @Path("group_id") group_id: String
+        @Path("group_id") group_id: String,
+        @Body  jsonBody: String
     ): Call<GenericResponse>
 
     // upload file

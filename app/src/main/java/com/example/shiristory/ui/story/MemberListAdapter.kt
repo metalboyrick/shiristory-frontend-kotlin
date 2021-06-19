@@ -54,20 +54,7 @@ class MemberListAdapter(private val _dataSet: ArrayList<GroupMembersEntry>, priv
         // Get element from your _dataSet at this position and replace the
         // contents of the view with that element
         viewHolder.memberName.text = member.nickname
-
-        val sharedPref: SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(viewHolder.itemView.context)
-
-        _currentUserId = sharedPref.getString("userId", " ")
-
-        var adminIDs : ArrayList<String> = ArrayList<String>()
-
-        for(admin in _admins){
-            adminIDs.add(admin.id)
-        }
-
-        // TODO: remove the cross bars if current user is not admin (wait until user state is implemented)
-        if (!(_currentUserId!! in adminIDs)) viewHolder.memberKickButton.visibility = View.INVISIBLE
+        viewHolder.memberKickButton.visibility = View.INVISIBLE
 
         // load the images
         Glide.with(viewHolder.itemView)

@@ -1,8 +1,10 @@
 package com.example.shiristory.ui.story
 
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import androidx.activity.viewModels
@@ -10,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shiristory.MainActivity
 import com.example.shiristory.R
 import com.example.shiristory.service.common.Constants.FINISHED
 import com.example.shiristory.service.common.Constants.ONGOING
@@ -20,6 +23,7 @@ class StorySettingsActivity : AppCompatActivity() {
     private val _model: StorySettingsViewModel by viewModels()
     private lateinit var _groupNameView: EditText
     private lateinit var _groupStatusView: Switch
+    private lateinit var _leaveGroupBtn: Button
     private var _currentUsername: String? = ""
     private var _currentUserId: String? = ""
     private val _context = this@StorySettingsActivity
@@ -32,6 +36,7 @@ class StorySettingsActivity : AppCompatActivity() {
 
         _groupNameView = findViewById(R.id.edit_group_name)
         _groupStatusView = findViewById(R.id.group_status_switch)
+        _leaveGroupBtn = findViewById(R.id.group_leave_button)
         _memberRecyclerView = findViewById(R.id.group_members_recyclerview)
         _adminRecyclerView = findViewById(R.id.group_admins_recyclerview)
 
@@ -60,8 +65,12 @@ class StorySettingsActivity : AppCompatActivity() {
             })
         }
 
-        // remove cross if user is admin
-
+        // leave group button
+        _leaveGroupBtn.setOnClickListener {
+            _model.leaveGroup(_currentUserId!!, _currentGroupId!!)
+            val goToMainIntent = Intent(this, MainActivity::class.java)
+            startActivity(goToMainIntent)
+        }
 
 
     }
