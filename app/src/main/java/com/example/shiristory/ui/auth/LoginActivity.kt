@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.dd.processbutton.iml.ActionProcessButton
 import com.example.shiristory.R
@@ -37,8 +38,6 @@ class LoginActivity : AppCompatActivity() {
     // shared preference related
     var sharedpreferences: SharedPreferences? = null
     val shiristory_PREFERENCES = "shiristory"
-    val pref_username_field = "username"
-    val pref_password_field = "password"
 
     // API related
     private var _loginResponse: MutableLiveData<Token> = MutableLiveData<Token>()
@@ -94,11 +93,19 @@ class LoginActivity : AppCompatActivity() {
 
         _login(credentials).observe(this, Observer {
             if(it != null){
-                val editor = sharedpreferences!!.edit()
+                val sharedPref: SharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(this)
+                val editor = sharedPref.edit()
 
-                editor.putString(pref_username_field, username)
-                editor.putString(pref_password_field, password)
+                Log.d("login access token",it.access!!)
+
+                editor.putString(R.string.jwt_access_key.toString(), it.access)
+                editor.putString(R.string.jwt_refresh_key.toString(), it.refresh)
                 editor.apply()
+
+                btnSignIn!!.setProgress(100)
+
+                finish()
             }
         })
 

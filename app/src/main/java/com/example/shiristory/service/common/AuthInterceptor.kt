@@ -8,7 +8,7 @@ import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.example.shiristory.R
 import com.example.shiristory.Shiristory
 import com.example.shiristory.service.authentication.AuthenticationApiService
-import com.example.shiristory.ui.profile.LoginActivity
+import com.example.shiristory.ui.auth.LoginActivity
 import com.google.gson.Gson
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -19,12 +19,10 @@ class AuthInterceptor : Interceptor {
 
     private val TAG: String = this.javaClass.name
     private val _context: Context? = Shiristory.instance
-    private val _service: AuthenticationApiService = RetrofitBuilder.authenticationApiService
+
 
 
     override fun intercept(chain: Interceptor.Chain): Response {
-
-
 
         val sharedPref: SharedPreferences = getDefaultSharedPreferences(_context)
 
@@ -33,6 +31,8 @@ class AuthInterceptor : Interceptor {
 
         // Creating the origin request object
         var request: Request = chain.request()
+
+        val _service: AuthenticationApiService = RetrofitBuilder.authenticationApiService
 
         Log.d(TAG, "Intercept request: " + request.url())
 
@@ -66,9 +66,10 @@ class AuthInterceptor : Interceptor {
                 }
 
                 val data = mapOf("refresh" to refreshToken)
+                Log.d(TAG, Gson().toJson(data))
 
                 // get new access token
-                val call = _service.refresh(Gson().toJson(data))
+                val call = _service.refresh(json_body = Gson().toJson(data))
 
                 // Invoking the service call
                 val refreshTokenResponse = call.execute()
