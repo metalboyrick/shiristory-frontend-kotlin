@@ -2,7 +2,6 @@ package com.example.shiristory.service.story
 
 import com.example.shiristory.service.common.Constants
 import com.example.shiristory.service.common.Constants.STORY_API_PREFIX
-import com.example.shiristory.service.common.Constants.TOKEN
 import com.example.shiristory.service.common.models.GenericResponse
 import com.example.shiristory.service.story.models.*
 import com.example.shiristory.service.timeline.models.Comment
