@@ -104,6 +104,23 @@ class StoryActivity : AppCompatActivity() {
         }
     }
 
+    // function to send messages through WS
+    fun sendMessage(username: String, mediaType: MediaType, content: String){
+        var newMsg: OutMessage = OutMessage(
+            "chat_message",
+            _currentGroupId!!,
+            "vaaniscool",                       // hardcoded for now
+            mediaType.id,
+            content,
+            mediaType.id,
+            0
+        )
+
+        val jsonStr: String = gson.toJson(newMsg)
+
+        _ws.send(jsonStr)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_story)
@@ -149,19 +166,7 @@ class StoryActivity : AppCompatActivity() {
         // set click listener for send button
         _sendMessageBtn.setOnClickListener {
             // send message
-            var newMsg: OutMessage = OutMessage(
-                "chat_message",
-                _currentGroupId!!,
-                "vaaniscool",                       // hardcoded for now
-                MediaType.TEXT.id,
-                _textBoxView.text.toString(),
-                MediaType.TEXT.id,
-                0
-            )
-
-            val jsonStr: String = gson.toJson(newMsg)
-
-            _ws.send(jsonStr)
+            sendMessage("vaaniscool", MediaType.TEXT, _textBoxView.text.toString())
 
             // empty the text box
             _textBoxView.text.clear()
@@ -252,22 +257,7 @@ class StoryActivity : AppCompatActivity() {
                     _model.uploadFile(_mediaType!!,_mediaUri!!).observe(this, Observer {
                         if (it != null) {
                             Log.d(TAG, it.fileUrl)
-
-                            // send through socket
-                            // send message
-                            var newMsg: OutMessage = OutMessage(
-                                "chat_message",
-                                _currentGroupId!!,
-                                "vaaniscool",                       // hardcoded for now
-                                _mediaType!!.id,
-                                it.fileUrl,
-                                _mediaType!!.id,
-                                0
-                            )
-
-                            val jsonStr: String = gson.toJson(newMsg)
-
-                            _ws.send(jsonStr)
+                            sendMessage("vaaniscool", _mediaType!!, it.fileUrl)
                         }
                     })
 
