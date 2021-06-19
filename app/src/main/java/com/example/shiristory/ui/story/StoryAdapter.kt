@@ -1,5 +1,7 @@
 package com.example.shiristory.ui.story
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,14 +54,20 @@ class StoryAdapter(
 
         viewHolder.storyAuthor.text = "By: ${storyEntry.author}"
 
+        viewHolder.storyContent.visibility = View.GONE
+        viewHolder.storyImage.visibility = View.GONE
+        viewHolder.playAudioBtn.visibility = View.GONE
+        viewHolder.storyVideo.visibility = View.GONE
+
         when (storyEntry.type) {
             // handle text
             MediaType.TEXT.id -> {
+                viewHolder.storyContent.visibility = View.VISIBLE
                 viewHolder.storyContent.text = storyEntry.content
+
             }
             // handle images
             MediaType.IMAGE.id -> {
-                viewHolder.storyContent.visibility = View.GONE
                 viewHolder.storyImage.visibility = View.VISIBLE
 
                 // load the images
@@ -70,11 +78,32 @@ class StoryAdapter(
             // handle audio
             MediaType.AUDIO.id -> {
 
+                // handle mediaplayer logic here
+                var parsedUri = Uri.parse(storyEntry.content)
+                var mediaPlayer = MediaPlayer.create(viewHolder.itemView.context, parsedUri)
+
+                // listener when the media player has finished playing
+                mediaPlayer.setOnCompletionListener {
+                    viewHolder.playAudioBtn.text = viewHolder.itemView.context.getString(R.string.play_audio)
+                }
+
+                viewHolder.playAudioBtn.setOnClickListener {
+                    if (mediaPlayer.isPlaying){
+                        mediaPlayer.pause()
+                        viewHolder.playAudioBtn.text = viewHolder.itemView.context.getString(R.string.play_audio)
+                    }
+                    else {
+                        mediaPlayer.seekTo(0)
+                        mediaPlayer.start()
+                        viewHolder.playAudioBtn.text = viewHolder.itemView.context.getString(R.string.stop_audio)
+                    }
+                }
+
+                viewHolder.playAudioBtn.visibility = View.VISIBLE
+
             }
             // handle video
             MediaType.VIDEO.id -> {
-
-                viewHolder.storyContent.visibility = View.GONE
                 viewHolder.storyVideo.visibility = View.VISIBLE
 
                 val mediaController = MediaController(viewHolder.itemView.context)
