@@ -45,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    fun _login(credentials: Map<String, String>): LiveData<Token> {
+    private fun _login(credentials: Map<String, String>): LiveData<Token> {
 
         _loginResponse.value = null
 
