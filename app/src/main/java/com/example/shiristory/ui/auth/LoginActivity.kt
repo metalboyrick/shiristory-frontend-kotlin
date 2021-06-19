@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun _login(credentials: Map<String, String>): LiveData<Token> {
+    private fun _login(credentials: Map<String, String>): LiveData<Token> {
 
         _loginResponse.value = null
 

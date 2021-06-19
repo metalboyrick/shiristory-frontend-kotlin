@@ -46,7 +46,7 @@ class AuthInterceptor : Interceptor {
         Log.d(TAG, "Response code: " + response.code())
 
 
-        if (response.code() != 200) {
+        if (response.code() != 200 && !(request.url().toString().contains("/login")) ) {
 
             // If authentication error (token expired)
             if (response.code() == 401) {
