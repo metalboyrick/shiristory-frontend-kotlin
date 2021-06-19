@@ -67,5 +67,9 @@ class StoryViewModel : ViewModel() {
 
     }
 
+    fun createGroup(groupName: String, groupMembers: List<String>, firstStoryContent: String){
+
+        return
+    }
 
 }
