@@ -35,13 +35,6 @@ class GroupListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val storyList: ArrayList<StoryListEntry> = ArrayList<StoryListEntry>()
-//
-//        storyList.add(StoryListEntry("1","Omni man", "one upon a time, a tale of hero begins", "10 mins ago"))
-//        storyList.add(StoryListEntry("2","Omni man 2", "one upon a time, a tale of hero begins", "10 mins ago"))
-//        storyList.add(StoryListEntry("3","Omni man 3", "one upon a time, a tale of hero begins", "10 mins ago"))
-
-
         _createNewGrpBtn = view.findViewById(R.id.create_new_grp_btn)
         _createNewGrpBtn.setOnClickListener {
             val createGroupIntent = Intent(view.context!!, CreateGroupActivity::class.java)
@@ -51,7 +44,7 @@ class GroupListFragment : Fragment() {
         _recyclerView = view.findViewById(R.id.group_list_recyclerview)
         _recyclerView.layoutManager = LinearLayoutManager(context)
 
-        _model.getGroups(_page, _size,cache = true)?.observe(viewLifecycleOwner, Observer {
+        _model.getGroups(_page, _size)?.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 _recyclerView.adapter = GroupListAdapter(it, _model)
             }
