@@ -41,5 +41,5 @@
 
     <!-- Shared Preferences Key -->
     <string name="jwt_access_key">jwt_access</string>
-    <string name="jwt_refresh_key">jet_refresh</string>
+    <string name="jwt_refresh_key">jwt_refresh</string>
 </resources>
