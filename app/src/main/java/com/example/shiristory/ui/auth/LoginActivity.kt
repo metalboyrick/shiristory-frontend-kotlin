@@ -3,8 +3,6 @@ package com.example.shiristory.ui.auth
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Email
-import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -12,17 +10,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
-import com.bumptech.glide.Glide
 import com.dd.processbutton.iml.ActionProcessButton
 import com.example.shiristory.R
 import com.example.shiristory.service.authentication.AuthenticationApiService
 import com.example.shiristory.service.authentication.models.Token
 import com.example.shiristory.service.common.RetrofitBuilder
-import com.example.shiristory.service.common.models.APIError
-import com.example.shiristory.service.timeline.TimelineApiService
-import com.example.shiristory.service.timeline.models.Post
-import com.example.shiristory.service.user.UserApiService
-import com.example.shiristory.service.user.models.User
 import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
 import retrofit2.Call
@@ -31,7 +23,7 @@ import retrofit2.Response
 
 
 class LoginActivity : AppCompatActivity() {
-    private var btnSignIn:ActionProcessButton? = null
+    private var btnSignIn: ActionProcessButton? = null
     private var login_username: MaterialEditText? = null
     private var login_password: MaterialEditText? = null
 
@@ -58,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    fun _login(credentials: Map<String,String>):LiveData<Token> {
+    fun _login(credentials: Map<String, String>): LiveData<Token> {
 
         _loginResponse.value = null
 
@@ -80,24 +72,24 @@ class LoginActivity : AppCompatActivity() {
         return _loginResponse
     }
 
-    fun login(view: View){
+    fun login(view: View) {
 
         val username: String = login_username!!.getText().toString()
         val password: String = login_password!!.getText().toString()
 
-        if (username.length == 0 || password.length == 0){
+        if (username.length == 0 || password.length == 0) {
             return
         }
 
-        val credentials = mapOf("username" to username,"password" to password)
+        val credentials = mapOf("username" to username, "password" to password)
 
         _login(credentials).observe(this, Observer {
-            if(it != null){
+            if (it != null) {
                 val sharedPref: SharedPreferences =
                     PreferenceManager.getDefaultSharedPreferences(this)
                 val editor = sharedPref.edit()
 
-                Log.d("login access token",it.access!!)
+                Log.d("login access token", it.access!!)
 
                 editor.putString(R.string.jwt_access_key.toString(), it.access)
                 editor.putString(R.string.jwt_refresh_key.toString(), it.refresh)

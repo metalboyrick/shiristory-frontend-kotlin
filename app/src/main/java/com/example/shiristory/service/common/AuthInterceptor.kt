@@ -21,7 +21,6 @@ class AuthInterceptor : Interceptor {
     private val _context: Context? = Shiristory.instance
 
 
-
     override fun intercept(chain: Interceptor.Chain): Response {
 
         val sharedPref: SharedPreferences = getDefaultSharedPreferences(_context)
@@ -32,26 +31,30 @@ class AuthInterceptor : Interceptor {
         // Creating the origin request object
         var request: Request = chain.request()
 
-        val _service: AuthenticationApiService = RetrofitBuilder.authenticationApiService
+        val apiService: AuthenticationApiService = RetrofitBuilder.authenticationApiService
 
         Log.d(TAG, "Intercept request: " + request.url())
 
         // Add auth header
         if (accessToken != null) {
+            Log.d(TAG, "Add accessToken to request: " + request.url())
             request = request.newBuilder()
-                .addHeader("Authorization", accessToken)
+                .addHeader("Authorization", "Bearer $accessToken")
                 .build()
         }
 
         // Executing the request by invoking procced function
         // on the chain with the request object
+        Log.d(TAG, "Proceed request: " + request.url())
         var response: Response = chain.proceed(request)
 
+        Log.d(TAG, "Request code: " + response.code())
         // Verifying the whether the request is executed or not
         if (response.code() != 200) {
             if (response.code() == 401) {
+                response.close()
                 // This block executes when the token is exprie
-                var refreshToken: String? =
+                val refreshToken: String? =
                     sharedPref.getString(R.string.jwt_refresh_key.toString(), null)
 
                 // If there is no refresh token
@@ -69,7 +72,7 @@ class AuthInterceptor : Interceptor {
                 Log.d(TAG, Gson().toJson(data))
 
                 // get new access token
-                val call = _service.refresh(json_body = Gson().toJson(data))
+                val call = apiService.refresh(json_body = Gson().toJson(data))
 
                 // Invoking the service call
                 val refreshTokenResponse = call.execute()
@@ -93,8 +96,9 @@ class AuthInterceptor : Interceptor {
 
                 //replacing the new token in the origin request object
                 request = request.newBuilder()
-                    .addHeader("Authorization", refreshTokenResponse.body()?.access!!)
+                    .addHeader("Authorization", "Bearer " + refreshTokenResponse.body()?.access!!)
                     .build()
+
 
                 // Reinitialize the origin request
                 response = chain.proceed(request)
