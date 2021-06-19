@@ -16,29 +16,38 @@
         >
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/login_username"
+            android:id="@+id/sign_up_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:hint="@string/login_username"
+            android:hint="@string/signup_username_hint"
             android:paddingLeft="10dp" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/login_password"
+            android:id="@+id/sign_up_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:hint="@string/login_password"
+            android:hint="@string/signup_password_hint"
             android:inputType="textPassword"
             android:paddingLeft="10dp" />
 
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/sign_up_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="@string/signup_email_hint"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp" />
+
+
         <com.dd.processbutton.iml.ActionProcessButton
-            android:id="@+id/login_button"
+            android:id="@+id/sign_in_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:onClick="login"
-            android:text="Sign in"
+            android:onClick="signUp"
+            android:text="Sign up"
             android:textColor="@android:color/white"
             app:pb_colorComplete="@color/green_complete"
             app:pb_colorError="@color/red_error"
@@ -49,22 +58,6 @@
             app:pb_textError="Error"
             app:pb_textProgress="Loading" />
 
-        <com.dd.processbutton.iml.ActionProcessButton
-            android:id="@+id/sign_up_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:onClick="goSignUp"
-            android:text="@string/goto_sign_up"
-            android:textColor="@android:color/white"
-            app:pb_colorComplete="@color/green_complete"
-            app:pb_colorError="@color/red_error"
-            app:pb_colorNormal="@color/blue_green_300"
-            app:pb_colorPressed="@color/blue_pressed"
-            app:pb_colorProgress="@color/purple_progress"
-            app:pb_textComplete="Success"
-            app:pb_textError="Error"
-            app:pb_textProgress="Loading" />
 
 
     </LinearLayout>

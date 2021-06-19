@@ -1,6 +1,7 @@
 package com.example.shiristory.ui.auth
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -12,9 +13,11 @@ import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.dd.processbutton.iml.ActionProcessButton
 import com.example.shiristory.R
+import com.example.shiristory.SignupActivity
 import com.example.shiristory.service.authentication.AuthenticationApiService
 import com.example.shiristory.service.authentication.models.Token
 import com.example.shiristory.service.common.RetrofitBuilder
+import com.example.shiristory.ui.profile.EditProfileActivity
 import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
 import retrofit2.Call
@@ -36,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         // initialize components
-        login_button = findViewById<View>(R.id.btnSignIn) as ActionProcessButton?
+        login_button = findViewById<View>(R.id.login_button) as ActionProcessButton?
         login_button!!.setMode(ActionProcessButton.Mode.ENDLESS)
         login_username = findViewById(R.id.login_username)
         login_password = findViewById(R.id.login_password)
@@ -96,5 +99,11 @@ class LoginActivity : AppCompatActivity() {
 
         login_button!!.progress = 1
 
+    }
+
+    fun goSignUp(view:View){
+        val intent = Intent(this, SignupActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
