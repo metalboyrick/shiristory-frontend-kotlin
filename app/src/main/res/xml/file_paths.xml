@@ -3,4 +3,9 @@
     <external-path
         name="/storage/emulated/0"
         path="." />
+
+    <cache-path
+        name="/data/data/com.example.shiristory/cache"
+        path="." />
+
 </paths>

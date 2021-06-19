@@ -13,17 +13,29 @@
     <string name="play_audio">Play audio</string>
     <string name="msg_hint">What happens next?</string>
 
-
     <string name="post_add">Add post</string>
     <string name="post_submit">Submit</string>
     <string name="post_add_title">Create post</string>
     <string name="post_add_hint">What\'s your story?</string>
     <string name="post_add_select_media">Photo/Video</string>
 
-    <string name="default_friend_name">Elon Musk</string>
-    <string name="add_friend">Add friend</string>
-    <string name="search_friend">Find friend</string>
-    <string name="cancel">Cancel</string>
+    <string name="contact_default_friend_name">Elon Musk</string>
+    <string name="contact_add_friend">Add friend</string>
+    <string name="contact_search_friend">Find friend</string>
+    <string name="contact_operation_cancel">Cancel</string>
+    <string name="contacts_result">Friend list</string>
+    <string name="contacts_search">Search result</string>
+    <string name="contacts_all">All friends</string>
+
+    <string name="login_username">Your username</string>
+    <string name="login_password">Your password</string>
+    <string name="goto_sign_up">Sign up</string>
+
+    <string name="sign_up_username_hint">New username</string>
+    <string name="sign_up_password_hint">New password</string>
+    <string name="sign_up_email_hint">New email</string>
+    <string name="sign_up_cancel">Cancel</string>
+
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
@@ -33,5 +45,7 @@
     <string name="story_goto_settings">story_goto_settings</string>
     <string name="story_admins">Admins</string>
 
-
+    <!-- Shared Preferences Key -->
+    <string name="jwt_access_key">jwt_access</string>
+    <string name="jwt_refresh_key">jwt_refresh</string>
 </resources>
