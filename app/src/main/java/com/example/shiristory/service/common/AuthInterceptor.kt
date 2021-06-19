@@ -1,19 +1,32 @@
 package com.example.shiristory.service.common
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.example.shiristory.R
 import com.example.shiristory.Shiristory
+import com.example.shiristory.service.authentication.AuthenticationApiService
+import com.example.shiristory.ui.profile.LoginActivity
+import com.google.gson.Gson
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 
+
 class AuthInterceptor : Interceptor {
+
+    private val TAG: String = this.javaClass.name
+    private val _context: Context? = Shiristory().getAppContext()
+    private val _service: AuthenticationApiService = RetrofitBuilder.authenticationApiService
+
+
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        val context: Context? = Shiristory().getAppContext()
-        val sharedPref: SharedPreferences = getDefaultSharedPreferences(context)
+
+        val sharedPref: SharedPreferences = getDefaultSharedPreferences(_context)
+
 
         var accessToken: String? = sharedPref.getString(R.string.jwt_access_key.toString(), null)
 
@@ -21,7 +34,7 @@ class AuthInterceptor : Interceptor {
         var request: Request = chain.request()
 
         // Add auth header
-        if ( accessToken != null ){
+        if (accessToken != null) {
             request = request.newBuilder()
                 .header("Authorization", accessToken)
                 .build()
@@ -34,26 +47,52 @@ class AuthInterceptor : Interceptor {
         // Verifying the whether the request is executed or not
         if (response.code() != 200) {
             if (response.code() == 401) {
-                // This block executes when the token is expried
+                // This block executes when the token is exprie
+                var refreshToken: String? =
+                    sharedPref.getString(R.string.jwt_refresh_key.toString(), null)
 
-                // creating get access token service call object
-                val call = apiService.requestNewToken(getrefreshTokenBody())
+                // If there is no refresh token
+                // Redirect to login page
+                if (refreshToken == null) {
+                    Log.d(TAG, "User not logged in.")
+                    val intent = Intent(_context, LoginActivity::class.java)
+                    _context?.startActivity(intent)
+                    return response
+                }
+
+                val data = mapOf("refresh" to refreshToken)
+
+                // get new access token
+                val call = _service.refresh(Gson().toJson(data))
 
                 // Invoking the service call
                 val refreshTokenResponse = call.execute()
 
+                if (refreshTokenResponse.code() == 401) {
+                    Log.d(TAG, "Invalid refresh token")
+                    val intent = Intent(_context, LoginActivity::class.java)
+                    _context?.startActivity(intent)
+                    return response
+                }
+
                 //saving the access token in preference
-                SharedPrefManager.mTokenValue = refreshTokenResponse.token
+                val editor = sharedPref.edit()
+                editor.putString(
+                    R.string.jwt_access_key.toString(),
+                    refreshTokenResponse.body()?.access
+                )
+                editor.apply()
 
                 //replacing the new token in the origin request object
                 request = request.newBuilder()
-                    .header("Authorization", refreshTokenResponse.token)
+                    .header("Authorization", refreshTokenResponse.body()?.access!!)
                     .build()
 
-                //reintializing the origin request
+                // Reinitialize the origin request
                 response = chain.proceed(request)
             } else {
                 //handle other errors here
+                Log.e(TAG, "Something bad happened. Code: " + response.code().toString())
             }
         }
 
