@@ -23,6 +23,10 @@
     <string name="add_friend">Add friend</string>
     <string name="search_friend">Find friend</string>
     <string name="cancel">Cancel</string>
+    <string name="login_username">Your username</string>
+    <string name="login_password">Your password</string>
+    <string name="signup_username">Login</string>
+    <string name="signup_password">Login</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
