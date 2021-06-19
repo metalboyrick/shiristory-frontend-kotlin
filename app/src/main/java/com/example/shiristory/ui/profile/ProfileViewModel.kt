@@ -90,7 +90,6 @@ class ProfileViewModel : ViewModel() {
             ) {
                 val userProfileResponse = response.body()
                 Log.d("user", "profile updated")
-                Log.d("update message", userProfileResponse?.message!!)
                 _updateStatus.value = true
 
             }
