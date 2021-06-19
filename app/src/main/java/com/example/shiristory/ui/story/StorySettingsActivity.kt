@@ -4,10 +4,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Switch
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +27,7 @@ class StorySettingsActivity : AppCompatActivity() {
     private lateinit var _groupStatusView: Switch
     private lateinit var _leaveGroupBtn: Button
     private var _currentUsername: String? = ""
+    private var _currentGroupName: String? = ""
     private var _currentUserId: String? = ""
     private val _context = this@StorySettingsActivity
     private lateinit var _memberRecyclerView: RecyclerView
@@ -56,6 +59,7 @@ class StorySettingsActivity : AppCompatActivity() {
         if(_currentGroupId != null){
             _model.getGroupInfo(_currentGroupId!!).observe(this, Observer {
                 if (it != null) {
+                    _currentGroupName = it.name
                     _groupNameView.setText(it.name)
                     if(it.status == FINISHED)
                         _groupStatusView.isChecked = true
@@ -73,5 +77,31 @@ class StorySettingsActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onBackPressed() {
+        val storyIntent = Intent(applicationContext, StoryActivity::class.java).apply {
+            putExtra("groupId", _currentGroupId)
+            putExtra("groupName", _currentGroupName)
+        }
+        startActivity(storyIntent)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+
+            android.R.id.home -> {
+                val storyIntent = Intent(applicationContext, StoryActivity::class.java).apply {
+                    putExtra("groupId", _currentGroupId)
+                    putExtra("groupName", _currentGroupName)
+                }
+                startActivity(storyIntent)
+            }
+
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+        return true
     }
 }

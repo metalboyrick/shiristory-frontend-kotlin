@@ -43,6 +43,7 @@ class StoryActivity : AppCompatActivity() {
 
     private var _currentGroupId: String? = ""
     private var _currentUsername: String? = ""
+    private var _currentGroupName: String? = ""
     private var _currentUserId: String? = ""
     private val _model: StoryViewModel by viewModels()
 
@@ -154,6 +155,8 @@ class StoryActivity : AppCompatActivity() {
         // set the title of the actionbar
         val actionBar = supportActionBar
         actionBar?.title = intent.getStringExtra("groupName")
+
+        _currentGroupName = intent.getStringExtra("groupName")
 
         // display the messages
         if (_currentGroupId != null) {
@@ -268,6 +271,8 @@ class StoryActivity : AppCompatActivity() {
                             val previewIntent = Intent(_context, SendPreviewActivity::class.java).apply{
                                 putExtra("URI", _mediaUri.toString())
                                 putExtra("type", MediaType.IMAGE.id)
+                                putExtra("groupName", _currentGroupName)
+                                putExtra("groupId", _currentGroupId)
                             }
                             startActivityForResult(previewIntent, RequestCodes.REQUEST_PREVIEW_IMAGE)
 
@@ -277,6 +282,8 @@ class StoryActivity : AppCompatActivity() {
                             val previewIntent = Intent(_context, SendPreviewActivity::class.java).apply{
                                 putExtra("URI", _mediaUri.toString())
                                 putExtra("type", MediaType.VIDEO.id)
+                                putExtra("groupName", _currentGroupName)
+                                putExtra("groupId", _currentGroupId)
                             }
                             startActivityForResult(previewIntent, RequestCodes.REQUEST_PREVIEW_VIDEO)
                         }
@@ -298,6 +305,8 @@ class StoryActivity : AppCompatActivity() {
                     val previewIntent = Intent(_context, SendPreviewActivity::class.java).apply{
                         putExtra("URI", _mediaUri.toString())
                         putExtra("type", MediaType.IMAGE.id)
+                        putExtra("groupName", _currentGroupName)
+                        putExtra("groupId", _currentGroupId)
                     }
                     startActivityForResult(previewIntent, RequestCodes.REQUEST_PREVIEW_IMAGE)
 
