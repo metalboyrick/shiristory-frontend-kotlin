@@ -33,6 +33,7 @@
             android:id="@+id/image_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:visibility="gone"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
@@ -40,12 +41,14 @@
             android:id="@+id/video_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:visibility="gone" />
 
         <Button
             android:id="@+id/audio_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:text="@string/play_audio"
             android:visibility="gone" />
 

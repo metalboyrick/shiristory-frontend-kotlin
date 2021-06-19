@@ -1,11 +1,17 @@
 package com.example.shiristory.ui.story
 
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.shiristory.R
+import com.example.shiristory.service.common.MediaType
 import com.example.shiristory.service.story.models.StoryEntry
 
 class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _model: StoryViewModel) :
@@ -21,6 +27,9 @@ class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _mod
 
         val storyContent: TextView = view.findViewById(R.id.story_text_content)
         val storyAuthor: TextView = view.findViewById(R.id.story_author)
+        val storyImage: ImageView = view.findViewById(R.id.image_content)
+        val storyVideo : VideoView = view.findViewById(R.id.video_content)
+        val playAudioBtn : Button = view.findViewById(R.id.audio_content)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -38,20 +47,45 @@ class StoryAdapter(private val _dataSet: ArrayList<StoryEntry>, private val _mod
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: StoryViewHolder, position: Int) {
-        val StoryEntry: StoryEntry = _dataSet[position]
+        val storyEntry: StoryEntry = _dataSet[position]
         // Get element from your _dataSet at this position and replace the
         // contents of the view with that element
-        viewHolder.storyContent.text = StoryEntry.content
-        viewHolder.storyAuthor.text = "By: ${StoryEntry.author}"
-//        viewHolder.storyLastEdited.text = StoryEntry.lastEdited
-        val storyId: String = StoryEntry.storyId
+
+        viewHolder.storyAuthor.text = "By: ${storyEntry.author}"
+
+        when(storyEntry.type){
+            // handle text
+            MediaType.TEXT.id -> {
+                viewHolder.storyContent.text = storyEntry.content
+            }
+            // handle images
+            MediaType.IMAGE.id -> {
+                viewHolder.storyContent.visibility = View.GONE
+                viewHolder.storyImage.visibility = View.VISIBLE
+
+                // load the images
+                Glide.with(viewHolder.itemView)
+                    .load(storyEntry.content)
+                    .into(viewHolder.storyImage)
+            }
+            // handle audio
+            MediaType.AUDIO.id -> {
+
+            }
+            // handle video
+            MediaType.VIDEO.id -> {
+
+            }
+        }
+
+        val storyId: String = storyEntry.storyId
     }
 
     // Return the size of your _dataSet (invoked by the layout manager)
     override fun getItemCount() = _dataSet.size
 
-    fun addItem(newImg : StoryEntry){
-        _dataSet.add(newImg)
+    fun addItem(newMsg : StoryEntry){
+        _dataSet.add(newMsg)
         notifyDataSetChanged()
     }
 }
