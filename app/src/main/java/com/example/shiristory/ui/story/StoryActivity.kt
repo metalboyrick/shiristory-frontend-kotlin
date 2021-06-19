@@ -2,6 +2,7 @@ package com.example.shiristory.ui.story
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +18,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -40,6 +42,8 @@ class StoryActivity : AppCompatActivity() {
     private lateinit var _ws : WebSocket
 
     private var _currentGroupId: String? = ""
+    private var _currentUsername: String? = ""
+    private var _currentUserId: String? = ""
     private val _model: StoryViewModel by viewModels()
 
     private lateinit var _storyAdapter: StoryAdapter
@@ -112,7 +116,7 @@ class StoryActivity : AppCompatActivity() {
         var newMsg: OutMessage = OutMessage(
             "chat_message",
             _currentGroupId!!,
-            "vaaniscool",                       // hardcoded for now
+            username,            
             mediaType.id,
             content,
             mediaType.id,
@@ -141,7 +145,10 @@ class StoryActivity : AppCompatActivity() {
         _inputVideoBtn = findViewById(R.id.input_video)
         _inputVoicemailBtn = findViewById(R.id.voicemail_btn)
 
+        val sharedPref: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(this)
 
+        _currentUsername = sharedPref.getString("username", " ")
 
 
         // set the title of the actionbar
@@ -171,7 +178,7 @@ class StoryActivity : AppCompatActivity() {
         // set click listener for send button
         _sendMessageBtn.setOnClickListener {
             // send message
-            sendMessage("vaaniscool", MediaType.TEXT, _textBoxView.text.toString())
+            sendMessage(_currentUsername!!, MediaType.TEXT, _textBoxView.text.toString())
 
             // empty the text box
             _textBoxView.text.clear()
@@ -211,7 +218,7 @@ class StoryActivity : AppCompatActivity() {
                 _model.uploadFile(_mediaType!!,_mediaUri!!).observe(this, Observer {
                     if (it != null) {
                         Log.d(TAG, it.fileUrl)
-                        sendMessage("vaaniscool", _mediaType!!, it.fileUrl)
+                        sendMessage(_currentUsername!!, _mediaType!!, it.fileUrl)
                     }
                 })
             }
@@ -304,7 +311,7 @@ class StoryActivity : AppCompatActivity() {
                     _model.uploadFile(_mediaType!!,_mediaUri!!).observe(this, Observer {
                         if (it != null) {
                             Log.d(TAG, it.fileUrl)
-                            sendMessage("vaaniscool", _mediaType!!, it.fileUrl)
+                            sendMessage(_currentUsername!!, _mediaType!!, it.fileUrl)
                         }
                     })
 
