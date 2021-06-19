@@ -1,11 +1,15 @@
 package com.example.shiristory.ui.story
 
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.cardview.widget.CardView
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.shiristory.R
@@ -31,6 +35,7 @@ class StoryAdapter(
         val storyImage: ImageView = view.findViewById(R.id.image_content)
         val storyVideo: VideoView = view.findViewById(R.id.video_content)
         val playAudioBtn: Button = view.findViewById(R.id.audio_content)
+        val storyCard: CardView = view.findViewById(R.id.chat_card)
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -51,6 +56,16 @@ class StoryAdapter(
         val storyEntry: StoryEntry = _dataSet[position]
         // Get element from your _dataSet at this position and replace the
         // contents of the view with that element
+
+        val sharedPref: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(viewHolder.itemView.context)
+
+        if (storyEntry.author == sharedPref.getString("username", " ")){
+            viewHolder.storyCard.setCardBackgroundColor(viewHolder.itemView.context.getColor(R.color.gray_100))
+
+        }
+
+        Log.d(TAG, sharedPref.getString("username", " ")!!)
 
         viewHolder.storyAuthor.text = "By: ${storyEntry.author}"
 
