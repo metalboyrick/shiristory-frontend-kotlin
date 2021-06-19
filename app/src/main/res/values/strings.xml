@@ -42,6 +42,7 @@
     <string name="story_goto_settings">story_goto_settings</string>
     <string name="story_admins">Admins</string>
     <string name="group_leave_group">Leave Group</string>
+    <string name="group_create_group">Create Group</string>
     <string name="send">Send</string>
     <string name="cancel">Cancel</string>
 

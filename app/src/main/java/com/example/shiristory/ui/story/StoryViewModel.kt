@@ -67,5 +67,4 @@ class StoryViewModel : ViewModel() {
 
     }
 
-
 }
