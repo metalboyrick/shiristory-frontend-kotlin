@@ -1,27 +1,26 @@
 package com.example.shiristory.service.timeline.models
 
-import com.example.shiristory.service.authentication.models.User
 import com.google.gson.annotations.SerializedName
 
 data class Post(
     @SerializedName("_id")
-    val id:String,
+    val id: String,
     @SerializedName("author")
-    val author: User,
+    val author: SimpleUser,
     @SerializedName("content")
-    val content:String,
+    val content: String,
     @SerializedName("inv_link")
-    val invLink:String? = null,
+    val invLink: String? = null,
     @SerializedName("media")
-    val mediaUrl:String? = null,
+    val mediaUrl: String? = null,
     @SerializedName("media_type")
-    val mediaType:String? = null,
+    val mediaType: String? = null,
     @SerializedName("created_at")
     val createdAt: String,
     @SerializedName("updated_at")
-    val updatedAt:String,
+    val updatedAt: String,
     @SerializedName("likes")
-    var likes:ArrayList<User> = ArrayList<User>(),
+    var likes: ArrayList<SimpleUser> = ArrayList<SimpleUser>(),
     @SerializedName("comments")
-    var comments:ArrayList<Comment> = ArrayList<Comment>()
+    var comments: ArrayList<Comment> = ArrayList<Comment>()
 )
