@@ -43,6 +43,7 @@
     <string name="story_admins">Admins</string>
     <string name="group_leave_group">Leave Group</string>
     <string name="send">Send</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Shared Preferences Key -->
     <string name="jwt_access_key">jwt_access</string>

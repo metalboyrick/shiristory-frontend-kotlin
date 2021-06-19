@@ -3,6 +3,7 @@ package com.example.shiristory.ui.story
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -12,6 +13,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -54,9 +56,11 @@ class StoryActivity : AppCompatActivity() {
     private var _mediaType: MediaType? = null
     private var _mediaUri: Uri? = null
 
+    private var _recordAudioTrigger: Boolean = true
+
 
     private val _page: Int = 1
-    private val _size: Int = 20
+    private val _size: Int = 30
 
 
     val gson: Gson = Gson()
@@ -120,6 +124,7 @@ class StoryActivity : AppCompatActivity() {
         _ws.send(jsonStr)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_story)
@@ -187,6 +192,34 @@ class StoryActivity : AppCompatActivity() {
         // click listener for video
         _inputVideoBtn.setOnClickListener {
             _mediaUtil.recordVideo()
+        }
+
+        // click listener for audio
+        // the audio recorder is embedded, thus cannot use a delegated operation
+        _inputVoicemailBtn.setOnClickListener {
+            _mediaUtil.recordAudio(_recordAudioTrigger)
+
+            if(_recordAudioTrigger)
+                _inputVoicemailBtn.background = ContextCompat.getDrawable(_context, R.drawable.round_corner_red)
+            else{
+                _inputVoicemailBtn.background = ContextCompat.getDrawable(_context, R.drawable.round_corner_green)
+                Log.d(TAG, "uploading audio")
+
+                _mediaType = MediaType.AUDIO
+                _mediaUri = _mediaUtil.getAudioUri()
+
+                _model.uploadFile(_mediaType!!,_mediaUri!!).observe(this, Observer {
+                    if (it != null) {
+                        Log.d(TAG, it.fileUrl)
+                        sendMessage("vaaniscool", _mediaType!!, it.fileUrl)
+                    }
+                })
+            }
+
+
+
+
+            _recordAudioTrigger = !_recordAudioTrigger
         }
     }
 
