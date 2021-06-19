@@ -5,11 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.example.shiristory.R
 import com.example.shiristory.service.common.RetrofitBuilder
-import com.example.shiristory.service.common.models.GenericResponse
-import com.example.shiristory.service.story.StoryApiService
 import com.example.shiristory.service.story.models.GroupCreateResponse
 import com.example.shiristory.service.user.UserApiService
 import com.example.shiristory.service.user.models.User
@@ -22,6 +19,7 @@ import retrofit2.Response
 
 class CreateGroupActivity : AppCompatActivity() {
 
+    private val TAG = this.javaClass.name
     private lateinit var dataModel: ArrayList<DataModel>
     private lateinit var listView: ListView
     private lateinit var createGroupButton: Button
@@ -47,7 +45,7 @@ class CreateGroupActivity : AppCompatActivity() {
         call.enqueue(object : Callback<UserProfileResponse> {
 
             override fun onFailure(call: Call<UserProfileResponse>, t: Throwable) {
-                Log.d("banana", t.message!!)
+                Log.d("TAG", t.message!!)
             }
 
             override fun onResponse(
@@ -81,7 +79,7 @@ class CreateGroupActivity : AppCompatActivity() {
     }
 
     private fun createGroup() {
-        Log.d("banana", "aaaaaaaaaaaaaaaaaaaaaaaa")
+
         val inputGroupName: EditText = findViewById(R.id.story_input_grp_name)
 
         val firstStory = mapOf(
@@ -92,19 +90,20 @@ class CreateGroupActivity : AppCompatActivity() {
 
         val members = ArrayList<String>()
 
+        // Add self
         members.add(currentUserId!!)
 
         for (item in dataModel) {
-            Log.d("banana", item.checked.toString())
             if (item.checked) {
                 members.add(item.user.id)
             }
         }
 
         if (members.size <= 1) {
+            Toast.makeText(this, "Members can't be empty.", Toast.LENGTH_SHORT).show()
             return
         }
-        Log.d("banana", "wwwwwwwww")
+
         val data = mapOf(
             "group_name" to inputGroupName.text.toString(),
             "group_members" to members,
@@ -116,12 +115,10 @@ class CreateGroupActivity : AppCompatActivity() {
         val call: Call<GroupCreateResponse> =
             RetrofitBuilder.storyApiService.createStoryGroup(json_body = Gson().toJson(data))
 
-        Log.d("banana", Gson().toJson(data))
-
         call.enqueue(object : Callback<GroupCreateResponse> {
 
             override fun onFailure(call: Call<GroupCreateResponse>, t: Throwable) {
-                Log.e("create group", t.message!!)
+                Log.e(TAG, t.message!!)
             }
 
             override fun onResponse(
@@ -130,15 +127,12 @@ class CreateGroupActivity : AppCompatActivity() {
             ) {
 
                 if (response.body() != null) {
-                    Log.d("banana", response.body()?.group_id!!)
                     val storyIntent = Intent(applicationContext, StoryActivity::class.java).apply {
                         putExtra("groupId", response.body()?.group_id)
                         putExtra("groupName", inputGroupName.text.toString())
                     }
                     startActivity(storyIntent)
                 }
-
-
             }
         })
     }

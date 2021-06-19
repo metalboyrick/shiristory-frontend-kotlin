@@ -4,11 +4,7 @@ import com.example.shiristory.service.common.Constants
 import com.example.shiristory.service.common.Constants.STORY_API_PREFIX
 import com.example.shiristory.service.common.models.GenericResponse
 import com.example.shiristory.service.story.models.*
-import com.example.shiristory.service.timeline.models.Comment
-import com.example.shiristory.service.timeline.models.Post
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.Response
 import retrofit2.Call
 import retrofit2.http.*
 
