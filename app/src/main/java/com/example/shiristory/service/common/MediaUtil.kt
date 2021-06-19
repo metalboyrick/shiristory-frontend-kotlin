@@ -132,7 +132,6 @@ class MediaUtil(private val _activity: Activity) {
             }
         } else   {
             audioRecorder.stop()
-            audioRecorder.release()
         }
     }
 }

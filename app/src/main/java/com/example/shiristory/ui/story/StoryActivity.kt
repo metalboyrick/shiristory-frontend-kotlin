@@ -17,6 +17,8 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +28,7 @@ import com.example.shiristory.R
 import com.example.shiristory.service.common.*
 import com.example.shiristory.service.common.Constants.BASE_WS_URL
 import com.example.shiristory.service.common.MediaType
+import com.example.shiristory.service.story.models.FileUploadResponse
 import com.example.shiristory.service.story.models.OutMessage
 import com.example.shiristory.service.story.models.StoryEntry
 import com.google.gson.Gson
@@ -204,6 +207,8 @@ class StoryActivity : AppCompatActivity() {
             _mediaUtil.recordVideo()
         }
 
+
+
         // click listener for audio
         // the audio recorder is embedded, thus cannot use a delegated operation
         _inputVoicemailBtn.setOnClickListener {
@@ -213,21 +218,23 @@ class StoryActivity : AppCompatActivity() {
                 _inputVoicemailBtn.background = ContextCompat.getDrawable(_context, R.drawable.round_corner_red)
             else{
                 _inputVoicemailBtn.background = ContextCompat.getDrawable(_context, R.drawable.round_corner_green)
-                Log.d(TAG, "uploading audio")
+
 
                 _mediaType = MediaType.AUDIO
                 _mediaUri = _mediaUtil.getAudioUri()
 
-                _model.uploadFile(_mediaType!!,_mediaUri!!).observe(this, Observer {
+                var res: LiveData<FileUploadResponse> =  _model.uploadFile(_mediaType!!,_mediaUri!!)
+                res.observe(this, Observer {
                     if (it != null) {
                         Log.d(TAG, it.fileUrl)
+                        Log.d(TAG, "uploading audio")
+                        res.removeObservers(this as LifecycleOwner)
                         sendMessage(_currentUsername!!, _mediaType!!, it.fileUrl)
                     }
                 })
+
+
             }
-
-
-
 
             _recordAudioTrigger = !_recordAudioTrigger
         }
@@ -316,10 +323,12 @@ class StoryActivity : AppCompatActivity() {
 
             RequestCodes.REQUEST_PREVIEW_IMAGE , RequestCodes.REQUEST_PREVIEW_VIDEO-> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    Log.d(TAG, "uploading images")
-                    _model.uploadFile(_mediaType!!,_mediaUri!!).observe(this, Observer {
+                    var res: LiveData<FileUploadResponse> =  _model.uploadFile(_mediaType!!,_mediaUri!!)
+                    res.observe(this, Observer {
                         if (it != null) {
                             Log.d(TAG, it.fileUrl)
+                            Log.d(TAG, "uploading images")
+                            res.removeObservers(this as LifecycleOwner)
                             sendMessage(_currentUsername!!, _mediaType!!, it.fileUrl)
                         }
                     })

@@ -59,6 +59,7 @@ class StoryViewModel : ViewModel() {
 
             override fun onResponse(call: Call<FileUploadResponse>, response: Response<FileUploadResponse>) {
                 _fileUploadResponse.value = response.body()
+                Log.d(TAG, "URL generated")
             }
 
         })
