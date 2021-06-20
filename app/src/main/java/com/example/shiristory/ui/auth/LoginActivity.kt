@@ -128,7 +128,9 @@ class LoginActivity : AppCompatActivity() {
 
                 login_button!!.progress = 100
 
-                finish()
+                val intent = Intent(this, MainActivity::class.java)
+
+                startActivity(intent);
             }
         })
 
