@@ -51,6 +51,8 @@ class StoryViewModel : ViewModel() {
 
         val call: Call<FileUploadResponse> = _service.uploadFile(media = ToolKits.parseMultiPartFile(media_uri, media_type.value))
 
+        _fileUploadResponse = MutableLiveData<FileUploadResponse>()
+
         call.enqueue(object : Callback<FileUploadResponse> {
 
             override fun onFailure(call: Call<FileUploadResponse>, t: Throwable) {

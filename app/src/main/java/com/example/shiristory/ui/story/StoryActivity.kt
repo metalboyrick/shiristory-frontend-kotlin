@@ -223,10 +223,12 @@ class StoryActivity : AppCompatActivity() {
                 _mediaType = MediaType.AUDIO
                 _mediaUri = _mediaUtil.getAudioUri()
 
+                Log.d(TAG, _mediaUri!!.path!!)
+
                 var res: LiveData<FileUploadResponse> =  _model.uploadFile(_mediaType!!,_mediaUri!!)
                 res.observe(this, Observer {
                     if (it != null) {
-                        Log.d(TAG, it.fileUrl)
+                        Log.d(TAG, "AUDIO_FILE_URI: " + it.fileUrl)
                         Log.d(TAG, "uploading audio")
                         res.removeObservers(this as LifecycleOwner)
                         sendMessage(_currentUsername!!, _mediaType!!, it.fileUrl)

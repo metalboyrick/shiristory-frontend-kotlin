@@ -7,10 +7,12 @@ import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,7 +20,8 @@ class MediaUtil(private val _activity: Activity) {
 
     private lateinit var _photoUri: Uri
     private lateinit var _audioUri: Uri
-    val audioRecorder: MediaRecorder = MediaRecorder()
+    private var audioRecorder: MediaRecorder? = null
+
 
     fun getPhotoUri(): Uri = _photoUri
     fun getAudioUri(): Uri = _audioUri
@@ -106,6 +109,7 @@ class MediaUtil(private val _activity: Activity) {
     @RequiresApi(Build.VERSION_CODES.O)
     fun recordAudio(toggleRecord: Boolean){
         if(toggleRecord == true){
+
             requestMicPermission()
 
             val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
@@ -115,23 +119,42 @@ class MediaUtil(private val _activity: Activity) {
                 _activity.externalCacheDir /* directory */
             )
 
+            Log.d("MEDIA_UTIL", "MIC: generating file: " + audioFile.path)
+
             audioFile.also{
                 _audioUri = FileProvider.getUriForFile(
                     _activity,
                     "com.example.shiristory.fileprovider",
                     it
                 )
+                Log.d("MEDIA_UTIL", "MIC: generating URI: " + _audioUri.path)
 
-                audioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC)
-                audioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-                audioRecorder.setOutputFile(audioFile)
-                audioRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                audioRecorder = MediaRecorder().apply{
+                    setAudioSource(MediaRecorder.AudioSource.MIC)
+                    setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                    setOutputFile(it)
+                    setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 
-                audioRecorder.prepare()
-                audioRecorder.start()
+                    try {
+                        Log.d("MEDIA_UTIL", "MIC: preparing microphone")
+                        prepare()
+                    } catch (e: IOException) {
+                        Log.e("MEDIA_UTIL", "prepare() failed")
+                    }
+
+                    Log.d("MEDIA_UTIL", "MIC: starting to record")
+                    start()
+                }
             }
         } else   {
-            audioRecorder.stop()
+
+            audioRecorder?.apply {
+                Log.d("MEDIA_UTIL", "MIC: stopping...")
+                stop()
+                release()
+            }
+
+            audioRecorder = null
         }
     }
 }
