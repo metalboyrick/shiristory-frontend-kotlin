@@ -63,6 +63,8 @@ class StoryAdapter(
         if (storyEntry.author == sharedPref.getString("username", " ")){
             viewHolder.storyCard.setCardBackgroundColor(viewHolder.itemView.context.getColor(R.color.gray_100))
 
+        } else {
+            viewHolder.storyCard.setCardBackgroundColor(viewHolder.itemView.context.getColor(R.color.alice_blue_100))
         }
 
         Log.d(TAG, sharedPref.getString("username", " ")!!)
