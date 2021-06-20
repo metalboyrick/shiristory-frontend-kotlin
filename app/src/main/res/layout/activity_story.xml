@@ -35,8 +35,8 @@
 
         <ImageButton
             android:id="@+id/voicemail_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@drawable/round_corner_green"
             android:src="@drawable/ic_microphone" />
 
@@ -108,8 +108,8 @@
 
         <ImageButton
             android:id="@+id/send_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@drawable/round_corner_green"
             android:src="@drawable/ic_send_white" />
 
