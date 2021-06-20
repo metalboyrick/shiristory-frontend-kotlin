@@ -57,50 +57,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <Button
+            android:id="@+id/post_add_select_media_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:drawableLeft="@drawable/ic_baseline_insert_photo_24"
+            android:padding="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="10dp"
+            android:text="@string/post_add_select_media"
+            android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/post_add_select_media_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="64dp"
-                android:drawableLeft="@drawable/ic_baseline_insert_photo_24"
-                android:padding="5dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="10dp"
-                android:text="@string/post_add_select_media"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@+id/post_add_take_photo_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:backgroundTint="?attr/colorPrimary"
+            app:srcCompat="@drawable/ic_baseline_camera_alt_24" />
 
-            <ImageButton
-                android:id="@+id/post_add_take_photo_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:backgroundTint="?attr/colorPrimary"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/post_add_select_media_button"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_baseline_camera_alt_24" />
-
-            <ImageButton
-                android:id="@+id/post_add_record_video_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="74dp"
-                android:backgroundTint="?attr/colorPrimary"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/post_add_take_photo_button"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_baseline_video_camera_back_24" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageButton
+            android:id="@+id/post_add_record_video_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="74dp"
+            android:backgroundTint="?attr/colorPrimary"
+            app:srcCompat="@drawable/ic_baseline_video_camera_back_24" />
 
     </LinearLayout>
 
