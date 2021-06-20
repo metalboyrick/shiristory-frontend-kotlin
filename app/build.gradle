@@ -1,4 +1,4 @@
-plugins {
+ plugins {
     id 'com.android.application'
     id 'kotlin-android'
 }
@@ -69,7 +69,6 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.jd-alexander:LikeButton:0.2.3'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
-
 
 
 }

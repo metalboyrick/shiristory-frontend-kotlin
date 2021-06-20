@@ -3,19 +3,28 @@ package com.example.shiristory.service.common
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.media.MediaRecorder
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MediaUtil(private val _activity: Activity) {
 
     private lateinit var _photoUri: Uri
+    private lateinit var _audioUri: Uri
+    private var audioRecorder: MediaRecorder? = null
+
 
     fun getPhotoUri(): Uri = _photoUri
+    fun getAudioUri(): Uri = _audioUri
 
     // Launch camera intent to capture an image
     // The image will be saved in external cache folder of the app
@@ -85,5 +94,67 @@ class MediaUtil(private val _activity: Activity) {
             arrayOf(Manifest.permission.CAMERA),
             RequestCodes.REQUEST_CAMERA_PERMISSION
         )
+    }
+
+    // audio recording implementations
+    private fun requestMicPermission() {
+        ActivityCompat.requestPermissions(
+            _activity,
+            arrayOf(Manifest.permission.RECORD_AUDIO),
+            RequestCodes.REQUEST_AUDIO_PERMISSION
+        )
+    }
+
+    // toggle functions determine to start or stop recording
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun recordAudio(toggleRecord: Boolean){
+        if(toggleRecord == true){
+
+            requestMicPermission()
+
+            val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+            val audioFile = File.createTempFile(
+                "3GP_${timeStamp}_tmp", /* prefix */
+                ".3gp", /* suffix */
+                _activity.externalCacheDir /* directory */
+            )
+
+            Log.d("MEDIA_UTIL", "MIC: generating file: " + audioFile.path)
+
+            audioFile.also{
+                _audioUri = FileProvider.getUriForFile(
+                    _activity,
+                    "com.example.shiristory.fileprovider",
+                    it
+                )
+                Log.d("MEDIA_UTIL", "MIC: generating URI: " + _audioUri.path)
+
+                audioRecorder = MediaRecorder().apply{
+                    setAudioSource(MediaRecorder.AudioSource.MIC)
+                    setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                    setOutputFile(it)
+                    setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+
+                    try {
+                        Log.d("MEDIA_UTIL", "MIC: preparing microphone")
+                        prepare()
+                    } catch (e: IOException) {
+                        Log.e("MEDIA_UTIL", "prepare() failed")
+                    }
+
+                    Log.d("MEDIA_UTIL", "MIC: starting to record")
+                    start()
+                }
+            }
+        } else   {
+
+            audioRecorder?.apply {
+                Log.d("MEDIA_UTIL", "MIC: stopping...")
+                stop()
+                release()
+            }
+
+            audioRecorder = null
+        }
     }
 }

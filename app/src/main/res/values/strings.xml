@@ -11,6 +11,7 @@
     <string name="post_comment_hint">Write a comment...</string>
 
     <string name="play_audio">Play audio</string>
+    <string name="stop_audio">Stop audio</string>
     <string name="msg_hint">What happens next?</string>
 
     <string name="post_add">Add post</string>
@@ -44,6 +45,10 @@
     <string name="story_members">Members</string>
     <string name="story_goto_settings">story_goto_settings</string>
     <string name="story_admins">Admins</string>
+    <string name="group_leave_group">Leave Group</string>
+    <string name="group_create_group">Create Group</string>
+    <string name="send">Send</string>
+    <string name="cancel">Cancel</string>
 
     <!-- Shared Preferences Key -->
     <string name="jwt_access_key">jwt_access</string>
